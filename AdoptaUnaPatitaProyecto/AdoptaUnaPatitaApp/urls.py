@@ -20,4 +20,7 @@ urlpatterns = [
     path('solicitudes/', views.solicitudes, name="solicitudes"),
     path('solicitudes/enviar/', views.enviar_solicitud, name="enviar_solicitud"),
     path('solicitudes/gestionar/<int:id>/<str:accion>/', views.gestionar_solicitud, name="gestionar_solicitud"),
+
+    path("seguimientos/", views.seguimientos, name="seguimientos"),
+    path("seguimientos/agregar/", views.agregar_seguimiento, name="agregar_seguimiento"),
 ]

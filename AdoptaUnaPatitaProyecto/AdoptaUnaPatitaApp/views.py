@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 
+seguimientos_data = [
+     {"id": 1, "mascota": "Firulais", "usuario": "usuario1", "estado": "En progreso"},
+]
 mascotas_data = [
     {"id": 1, "nombre": "Firulais", "edad": 3, "raza": "Mestizo", "tipo": "Perro"},
     {"id": 2, "nombre": "Pelusa", "edad": 2, "raza": "Persa", "tipo": "Gato"},
@@ -119,3 +122,29 @@ def gestionar_solicitud(request, id, accion):
             break
 
     return redirect(f'/solicitudes/?rol={rol}')
+
+def seguimientos(request):
+    rol = request.GET.get("rol", "usuario")
+    if rol != "admin":
+        return redirect(f'/menu/?rol={rol}')
+    return render(request, "templatesApp/seguimientos.html", {"seguimientos": seguimientos_data, "rol": rol})
+
+def agregar_seguimiento(request):
+    rol = request.GET.get("rol", "usuario")
+    if rol != "admin":
+        return redirect(f'/seguimientos/?rol={rol}')
+
+    if request.method == "POST":
+        nueva_id = len(seguimientos_data) + 1
+        mascota = request.POST.get("mascota")
+        usuario = request.POST.get("usuario")
+        estado = request.POST.get("estado")
+        seguimientos_data.append({
+            "id": nueva_id,
+            "mascota": mascota,
+            "usuario": usuario,
+            "estado": estado
+        })
+        return redirect(f'/seguimientos/?rol={rol}')
+
+    return render(request, "templatesApp/agregar_seguimiento.html", {"rol": rol})
