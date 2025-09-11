@@ -46,6 +46,7 @@ def login_view(request):
             mensaje = "Usuario o contraseña incorrecta"
     return render(request, "templatesApp/login.html", {"mensaje": mensaje})
 
+# ========================================================================
 
 def menu(request):
 
@@ -57,7 +58,7 @@ def menu(request):
     rol = request.GET.get("rol", "usuario")
     return render(request, "templatesApp/menu.html", {"rol": rol})
 
-
+# =========================================================================
 
 def index(request):
 
@@ -66,6 +67,8 @@ def index(request):
     """ 
 
     return render(request, "templatesApp/index.html")
+
+# ==========================================================================
 
 def mascotas(request):
 
@@ -76,6 +79,8 @@ def mascotas(request):
 
     rol = request.GET.get("rol", "usuario")
     return render(request, "templatesApp/mascotas.html", {"mascotas": mascotas_data, "rol": rol})
+
+# ==========================================================================
 
 def agregar_mascota(request):
 
@@ -100,6 +105,8 @@ def agregar_mascota(request):
 
     return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
 
+# ===========================================================================
+
 def eliminar_mascota(request, id):
 
     """
@@ -113,6 +120,8 @@ def eliminar_mascota(request, id):
         mascotas_data = [m for m in mascotas_data if m["id"] != id]
     return redirect(f"/mascotas/?rol={rol}")
 
+# ===========================================================================
+
 def refugios(request):
 
     """
@@ -121,6 +130,8 @@ def refugios(request):
 
     rol = request.GET.get("rol", "usuario")
     return render(request, "templatesApp/refugios.html", {"refugios": refugios_data, "rol": rol})
+
+# ===========================================================================
 
 def agregar_refugio(request):
 
@@ -143,6 +154,8 @@ def agregar_refugio(request):
 
     return render(request, "templatesApp/agregar_refugios.html", {"rol": rol})
 
+# ============================================================================
+
 def solicitudes(request):
 
     """
@@ -151,6 +164,8 @@ def solicitudes(request):
 
     rol = request.GET.get("rol", "usuario")
     return render(request, "templatesApp/solicitudes.html", {"solicitudes": solicitudes_data, "rol": rol})
+
+# =============================================================================
 
 def enviar_solicitud(request):
 
@@ -174,6 +189,8 @@ def enviar_solicitud(request):
 
     return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol})
 
+# ================================================================================
+
 def gestionar_solicitud(request, id, accion):
 
     """
@@ -194,6 +211,8 @@ def gestionar_solicitud(request, id, accion):
             break
 
     return redirect(f'/solicitudes/?rol={rol}')
+
+# =================================================================================
 
 def seguimientos(request):
 
