@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar Solicitud</title>
+</head>
+<body class="bodygeneral">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <div><form method="post">
+        {% csrf_token %}
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br><br>
+
+        <label>Mascota:</label>
+        <input type="text" name="mascota" required><br><br>
+
+        <label>Comentarios:</label>
+        <textarea name="comentarios" required></textarea><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+    <br><a href="{% url 'mascotas' %}?rol={{ rol }}">
+            <img src="{% static 'img/volver.png' %}" class="volversolicitud" alt="volvermascotas">
+        </a>
+    </div>
+</body>
+</html>

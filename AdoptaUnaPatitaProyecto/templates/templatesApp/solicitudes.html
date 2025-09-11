@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <img src="{% static 'img/listasolicitudes.png' %}" class="listasolicitudes" alt="listasolicitudes">
+</head>
+<body class="bodygeneral">
+    <h1></h1>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <div class="solicitudestexto">
+        {% if solicitudes %}
+        <ul>
+            {% for solicitud in solicitudes %}
+                <li>
+                    {{ solicitud.id }} - {{ solicitud.nombre }} - {{ solicitud.mascota }} - {{ solicitud.comentarios }} - Estado: {{ solicitud.estado }}
+                    {% if rol == "admin" %}
+                        <a href="{% url 'gestionar_solicitud' id=solicitud.id accion='aceptar' %}?rol={{ rol }}">Aceptar</a>
+                        <a href="{% url 'gestionar_solicitud' id=solicitud.id accion='rechazar' %}?rol={{ rol }}">Rechazar</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay solicitudes registradas.</p>
+    {% endif %}
+
+    {% if rol == "usuario" %}
+        <a href="{% url 'enviar_solicitud' %}?rol={{ rol }}">Enviar Solicitud</a>
+    {% endif %}
+
+    <br><a href="{% url 'menu' %}?rol={{ rol }}">
+            <img src="{% static 'img/Volver.png' %}" class="volver" alt="volver">
+        </a>
+    </div>
+</body>
+</html>

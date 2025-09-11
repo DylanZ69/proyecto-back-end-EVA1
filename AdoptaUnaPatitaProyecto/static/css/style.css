@@ -1,0 +1,266 @@
+body {
+    background-image: url("/static/img/Adopta_una_Patitaa.jpg"); 
+    background-size: cover; 
+    background-attachment: fixed;
+    display: block;
+    align-items: center;
+    
+    overflow-y: scroll;      
+    overflow: hidden;
+    
+    
+}
+body::-webkit-scrollbar {
+    display: none; 
+}
+.bodygeneral {
+    background-image: url("/static/img/fondo_login.jpg"); 
+    background-size: cover; 
+    background-attachment: fixed;
+    display: block;
+    align-items: center;
+    
+    
+    
+}
+form{
+    
+    position: absolute;
+    top: 280px;         
+    left: 50%;          
+    transform: translateX(-50%);
+    background-color: rgba(255,255,255,0.8); 
+    padding: 50px 50px;   
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;            
+    font-size: 18px;
+
+
+}
+
+
+.login {
+  width: 220px;
+    cursor: pointer;
+    position: relative;
+    bottom: -425px;
+    left: 842px;
+    transition: transform 0.3s ease; 
+
+    
+}
+.login:hover {
+    transform: scale(1.1);         
+}
+.menufondo{
+    background-image: url("/static/img/fondo_login.jpg"); 
+    background-size: cover; 
+    background-attachment: fixed;
+    display: block;
+    align-items: center;
+    
+
+}
+
+.VerMascotas{
+     width: 280px;
+    cursor: pointer;
+    position: relative;
+    bottom: 89px;
+    left: 25%;
+    transition: transform 0.3s ease; 
+
+}.VerMascotas:hover {
+    transform: scale(1.1);         
+}
+.VerRefugios{
+     width: 280px;
+    cursor: pointer;
+    position: relative;
+    bottom: 89px;
+    left: 41%;
+    transition: transform 0.3s ease; 
+
+
+}
+.VerRefugios:hover {
+    transform: scale(1.1);         
+}
+.VerSolicitudes{
+    width: 280px;
+    cursor: pointer;
+    position: relative;
+    bottom: 89px;
+    left: 10%;
+    transition: transform 0.3s ease; 
+
+}
+.VerSolicitudes:hover {
+    transform: scale(1.1);         
+}
+
+.AgregarMascotas{
+     width: 280px;
+    cursor: pointer;
+    position: relative;
+    bottom: 1px;
+    left: -20.4%;
+    transition: transform 0.3s ease; 
+
+}
+.AgregarMascotas:hover {
+    transform: scale(1.1);         
+}
+.CerrarSesion{
+    width: 280px;
+    cursor: pointer;
+    position: relative;
+    bottom: 285px;
+    left: -62%;
+    transition: transform 0.3s ease; 
+
+}
+.CerrarSesion:hover {
+    transform: scale(1.1);         
+}
+
+.MenuPrincipal{
+
+    width: 650px;
+    position: relative;
+    bottom: -70px;
+    left: 592px;
+}
+.mascotastexto {
+    font-size:larger;
+    color: rgb(0, 0, 0);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 3px solid black;  
+    padding: 15px;             
+    border-radius: 15px;       
+    background-color: white; 
+    display: inline-block;     
+
+     width: 650px;
+    position: relative;
+    bottom:-230px;
+    left: 112px;
+}
+
+
+.volver{
+     width: 100px;
+    cursor: pointer;
+    position: relative;
+    bottom: 1px;
+    left: -1%;
+    transition: transform 0.3s ease; 
+
+}
+.volver:hover {
+    transform: scale(1.1);         
+}
+.listamascotas {
+     width: 500px;
+    cursor: pointer;
+    position: relative;
+    bottom: -150px;
+    left: 37%;
+}
+.listasolicitudes {
+    width: 500px;
+    cursor: pointer;
+    position: relative;
+    bottom: -170px;
+    left: 37%;
+}
+.solicitudestexto {
+    font-size:larger;
+    color: rgb(0, 0, 0);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 3px solid black;  
+    padding: 15px;             
+    border-radius: 15px;       
+    background-color: white; 
+    display: inline-block;     
+
+     width: 650px;
+    position: relative;
+    bottom: -60px;
+    left: 32%;
+}
+.listarefugios{
+    width: 500px;
+    cursor: pointer;
+    position: relative;
+    bottom: -180px;
+    left: 37%;
+}
+.refugiostexto {
+    font-size:larger;
+    color: rgb(0, 0, 0);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 3px solid black;  
+    padding: 15px;            
+    border-radius: 15px;       
+    background-color: white; 
+    display: inline-block;     
+
+     width: 650px;
+    position: relative;
+    bottom:-240px;
+    left: 112px;
+}
+.AgregarNuevaMascota{
+    width: 500px;
+    cursor: pointer;
+    position: relative;
+    bottom: -150px;
+    left: 37%;
+
+}
+.volvermascotas{
+     width: 100px;
+    cursor: pointer;
+    position: relative;
+    top: 400px;
+    left: 900px;
+    transition: transform 0.3s ease; 
+
+}
+.volvermascotas:hover {
+    transform: scale(1.1);         
+}
+.agregarmascota{
+    width: 700px;
+    left: 20px;
+    top: 100px;
+    position: relative;
+}
+.volversolicitud{
+     width: 100px;
+    cursor: pointer;
+    position: relative;
+    top: 700px;
+    left: 900px;
+    transition: transform 0.3s ease; 
+
+}
+.volversolicitud:hover {
+    transform: scale(1.1);         
+}
+
+.volverrefugio{
+     width: 100px;
+    cursor: pointer;
+    position: relative;
+    top: 700px;
+    left: 900px;
+    transition: transform 0.3s ease; 
+}
+.volverrefugio:hover {
+    transform: scale(1.1);         
+}

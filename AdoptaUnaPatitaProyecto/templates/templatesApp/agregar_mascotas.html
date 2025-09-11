@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Mascota</title>
+</head>
+<body class="bodygeneral">
+    <img src="{% static 'img/agregarmascota.png' %}" class="agregarmascota" alt="Ir al login">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <div class=""><form method="post">
+        {% csrf_token %}
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br><br>
+
+        <label>Edad:</label>
+        <input type="number" name="edad" required><br><br>
+
+        <label>Raza:</label>
+        <input type="text" name="raza" required><br><br>
+
+        <label>Tipo de Animal:</label>
+        <input type="text" name="tipo" required><br><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <br><a href="{% url 'mascotas' %}?rol={{ rol }}">
+            <img src="{% static 'img/volver.png' %}" class="volvermascotas" alt="volvermascotas">
+        </a>
+    </div>
+</body>
+</html>

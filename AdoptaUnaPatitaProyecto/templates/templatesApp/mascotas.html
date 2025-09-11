@@ -1,0 +1,30 @@
+{% load static %}
+<body class="bodyGeneral">
+    
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <img src="{% static 'img/listamascotas.png' %}" class="listamascotas" alt="listamascotas">
+    <div class="mascotastexto">
+        {% if mascotas %}
+        <ul>
+            {% for mascota in mascotas %}
+                <li>
+                    {{ mascota.id }} - {{ mascota.nombre }} - Edad: {{ mascota.edad }} - Raza: {{ mascota.raza }} - Tipo: {{ mascota.tipo }}
+                    {% if rol == "admin" %}
+                        <a href="{% url 'eliminar_mascota' id=mascota.id %}?rol={{ rol }}">Eliminar</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay mascotas registradas.</p>
+    {% endif %}
+
+    {% if rol == "admin" %}
+        <a href="{% url 'agregar_mascota' %}?rol={{ rol }}">Agregar Mascota</a>
+    {% endif %}
+    
+
+    <br><a href="{% url 'menu' %}?rol={{ rol }}">Volver al menú</a>
+</div>
+</body>
