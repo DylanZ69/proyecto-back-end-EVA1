@@ -4,30 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Agregar Mascota</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="bodygeneral">
-    <img src="{% static 'img/agregarmascota.png' %}" class="agregarmascota" alt="Ir al login">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <div class=""><form method="post">
-        {% csrf_token %}
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br><br>
+    <img src="{% static 'img/agregarmascota.png' %}" class="agregarmascota" alt="Agregar Mascota">
 
-        <label>Edad:</label>
-        <input type="number" name="edad" required><br><br>
+    <div>
+        <form id="formMascota">
+            <label>Nombre:</label>
+            <input type="text" id="nombre" required><br><br>
 
-        <label>Raza:</label>
-        <input type="text" name="raza" required><br><br>
+            <label>Edad:</label>
+            <input type="number" id="edad" required><br><br>
 
-        <label>Tipo de Animal:</label>
-        <input type="text" name="tipo" required><br><br>
+            <label>Raza:</label>
+            <input type="text" id="raza" required><br><br>
 
-        <button type="submit">Guardar</button>
-    </form>
+            <label>Tipo:</label>
+            <input type="text" id="tipo" required><br><br>
 
-    <br><a href="{% url 'mascotas' %}?rol={{ rol }}">
-            <img src="{% static 'img/volver.png' %}" class="volvermascotas" alt="volvermascotas">
+            <button type="submit">Guardar</button>
+        </form>
+
+        <p id="mensaje" style="color: green; font-weight: bold;"></p>
+
+        <br>
+        <a href="{% url 'menu' %}?rol={{ rol }}">
+            <img src="{% static 'img/volver.png' %}" class="volvermascotas" alt="Volver">
         </a>
     </div>
+
+    <script>
+        document.getElementById("formMascota").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const data = {
+                nombre: document.getElementById("nombre").value,
+                edad: parseInt(document.getElementById("edad").value),
+                raza: document.getElementById("raza").value,
+                tipo: document.getElementById("tipo").value,
+            };
+
+            try {
+                const response = await fetch("{% url 'crear_mascota' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("mensaje").textContent = "✅ Mascota creada correctamente.";
+                    setTimeout(() => {
+                        window.location.href = "{% url 'menu' %}?rol={{ rol }}";
+                    }, 1500);
+                } else {
+                    document.getElementById("mensaje").textContent = "❌ Error: " + (result.error || "No se pudo crear la mascota.");
+                }
+            } catch (error) {
+                document.getElementById("mensaje").textContent = "⚠️ Error de conexión con el servidor.";
+            }
+        });
+    </script>
 </body>
 </html>

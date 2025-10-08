@@ -1,40 +1,26 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Mascota, Refugio, Solicitud, Seguimiento
+import json
 
-# datos simulados para la app, simulando una base de datos
-seguimientos_data = [
-     {"id": 1, "mascota": "Firulais", "usuario": "usuario1", "estado": "En progreso"},
-]
-mascotas_data = [
-    {"id": 1, "nombre": "Firulais", "edad": 3, "raza": "Mestizo", "tipo": "Perro"},
-    {"id": 2, "nombre": "Pelusa", "edad": 2, "raza": "Persa", "tipo": "Gato"},
-]
-refugios_data = [
-    {"id": 1, "nombre": "Refugio Felino", "ubicacion": "Santiago"},
-    {"id": 2, "nombre": "Refugio Canino", "ubicacion": "Valparaíso"},
-]
-
-solicitudes_data = [
-    {"id": 1, "usuario": "usuario1", "mascota": "Firulais", "estado": "Pendiente"},
-    {"id": 2, "usuario": "usuario2", "mascota": "Pelusa", "estado": "Aprobada"},
-]
-
-# diccionario de usuarios con contraseña y rol
+# ----------------------------
+# USUARIOS DE PRUEBA
+# ----------------------------
 USUARIOS = {
-    "admin": {"password": "admin", "rol": "admin"},
-    "usuario1": {"password": "abcd", "rol": "usuario"}
+    "admin": {"password": "admin123", "rol": "admin"},
+    "usuario": {"password": "user123", "rol": "usuario"}
 }
 
-# vistas de la app
+# ----------------------------
+# VISTAS BÁSICAS
+# ----------------------------
+def index(request):
+    """Página principal HTML"""
+    return render(request, "templatesApp/index.html")
 
 def login_view(request):
-    
-    """
-    Vista para manejar el login de usuarios.
-    - Si es POST, valida usuario y contraseña.
-    - Redirige a menu según el rol.
-    - Si falla, muestra mensaje de error.
-    """
-    
+    """Vista para login HTML"""
     mensaje = ""
     if request.method == "POST":
         username = request.POST.get("usuario")
@@ -46,183 +32,231 @@ def login_view(request):
             mensaje = "Usuario o contraseña incorrecta"
     return render(request, "templatesApp/login.html", {"mensaje": mensaje})
 
-# ========================================================================
-
 def menu(request):
-
-    """
-    Vista del menú principal.
-    - Recibe el rol por GET para personalizar opciones.
-    """
-    
+    """Menú principal según rol"""
     rol = request.GET.get("rol", "usuario")
     return render(request, "templatesApp/menu.html", {"rol": rol})
 
-# =========================================================================
+# ----------------------------
+# CRUD MASCOTAS
+# ----------------------------
+def listar_mascotas(request):
+    if request.method == 'GET':
+        mascotas = Mascota.objects.all().values()
+        return JsonResponse(list(mascotas), safe=False)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-def index(request):
+def obtener_mascota(request, id):
+    try:
+        mascota = Mascota.objects.get(pk=id)
+        return JsonResponse({
+            "id": mascota.id,
+            "nombre": mascota.nombre,
+            "especie": mascota.especie,
+            "edad": mascota.edad,
+            "descripcion": mascota.descripcion
+        })
+    except Mascota.DoesNotExist:
+        return JsonResponse({"error": "Mascota no encontrada"}, status=404)
 
-    """
-    Vista de la página principal o index.
-    """ 
+@csrf_exempt
+def crear_mascota(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            mascota = Mascota.objects.create(
+                nombre=data['nombre'],
+                edad=data['edad'],
+                raza=data['raza'],
+                tipo=data['tipo']
+            )
+            return JsonResponse({"mensaje": "Mascota creada", "id": mascota.id}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        # Muestra formulario si se accede por navegador (GET)
+        return render(request, "templatesApp/agregar_mascota.html")
 
-    return render(request, "templatesApp/index.html")
+@csrf_exempt
+def actualizar_mascota(request, id):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            mascota = Mascota.objects.get(pk=id)
+            mascota.nombre = data.get('nombre', mascota.nombre)
+            mascota.especie = data.get('especie', mascota.especie)
+            mascota.edad = data.get('edad', mascota.edad)
+            mascota.descripcion = data.get('descripcion', mascota.descripcion)
+            mascota.save()
+            return JsonResponse({"mensaje": "Mascota actualizada"})
+        except Mascota.DoesNotExist:
+            return JsonResponse({"error": "Mascota no encontrada"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-# ==========================================================================
-
-def mascotas(request):
-
-    """
-    Vista para mostrar todas las mascotas.
-    - Pasa la lista de mascotas y el rol del usuario al template.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    return render(request, "templatesApp/mascotas.html", {"mascotas": mascotas_data, "rol": rol})
-
-# ==========================================================================
-
-def agregar_mascota(request):
-
-    """
-    Vista para agregar una nueva mascota (solo admin).
-    - Si no es admin, redirige a la lista de mascotas.
-    - Si es POST, toma datos del formulario y agrega la mascota.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    if rol != "admin":
-        return redirect(f"/mascotas/?rol={rol}")
-
-    if request.method == "POST":
-        nueva_id = len(mascotas_data) + 1
-        nombre = request.POST.get("nombre")
-        edad = request.POST.get("edad")
-        raza = request.POST.get("raza")
-        tipo = request.POST.get("tipo")
-        mascotas_data.append({"id": nueva_id, "nombre": nombre, "edad": edad, "raza": raza, "tipo":tipo})
-        return redirect(f"/mascotas/?rol={rol}")
-
-    return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
-
-# ===========================================================================
-
+@csrf_exempt
 def eliminar_mascota(request, id):
+    if request.method == 'DELETE':
+        try:
+            mascota = Mascota.objects.get(pk=id)
+            mascota.delete()
+            return JsonResponse({"mensaje": "Mascota eliminada"})
+        except Mascota.DoesNotExist:
+            return JsonResponse({"error": "Mascota no encontrada"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    """
-    Vista para eliminar una mascota (solo admin).
-    - Filtra la lista de mascotas excluyendo la que coincide con el ID.
-    """
+# ----------------------------
+# CRUD REFUGIOS
+# ----------------------------
+def listar_refugios(request):
+    if request.method == 'GET':
+        refugios = Refugio.objects.all().values()
+        return JsonResponse(list(refugios), safe=False)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    rol = request.GET.get("rol", "usuario")
-    if rol == "admin":
-        global mascotas_data
-        mascotas_data = [m for m in mascotas_data if m["id"] != id]
-    return redirect(f"/mascotas/?rol={rol}")
+@csrf_exempt
+def crear_refugio(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            refugio = Refugio.objects.create(
+                nombre=data['nombre'],
+                direccion=data['direccion'],
+                telefono=data['telefono']
+            )
+            return JsonResponse({"mensaje": "Refugio creado", "id": refugio.id}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return render(request, "templatesApp/crear_refugio.html")
 
-# ===========================================================================
+@csrf_exempt
+def actualizar_refugio(request, id):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            refugio = Refugio.objects.get(pk=id)
+            refugio.nombre = data.get('nombre', refugio.nombre)
+            refugio.direccion = data.get('direccion', refugio.direccion)
+            refugio.telefono = data.get('telefono', refugio.telefono)
+            refugio.save()
+            return JsonResponse({"mensaje": "Refugio actualizado"})
+        except Refugio.DoesNotExist:
+            return JsonResponse({"error": "Refugio no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-def refugios(request):
+@csrf_exempt
+def eliminar_refugio(request, id):
+    if request.method == 'DELETE':
+        try:
+            refugio = Refugio.objects.get(pk=id)
+            refugio.delete()
+            return JsonResponse({"mensaje": "Refugio eliminado"})
+        except Refugio.DoesNotExist:
+            return JsonResponse({"error": "Refugio no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    """
-    Vista para mostrar todos los refugios.
-    """
+# ----------------------------
+# CRUD SOLICITUDES DE ADOPCIÓN
+# ----------------------------
+def listar_solicitudes(request):
+    if request.method == 'GET':
+        solicitudes = Solicitud.objects.all().values()
+        return JsonResponse(list(solicitudes), safe=False)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    rol = request.GET.get("rol", "usuario")
-    return render(request, "templatesApp/refugios.html", {"refugios": refugios_data, "rol": rol})
+@csrf_exempt
+def crear_solicitud(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            solicitud = Solicitud.objects.create(
+                nombre_adoptante=data['nombre_adoptante'],
+                mascota_id=data['mascota_id'],
+                fecha=data['fecha'],
+                estado=data['estado']
+            )
+            return JsonResponse({"mensaje": "Solicitud creada", "id": solicitud.id}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return render(request, "templatesApp/crear_solicitud.html")
 
-# ===========================================================================
+@csrf_exempt
+def actualizar_solicitud(request, id):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            solicitud = Solicitud.objects.get(pk=id)
+            solicitud.nombre_adoptante = data.get('nombre_adoptante', solicitud.nombre_adoptante)
+            solicitud.mascota_id = data.get('mascota_id', solicitud.mascota_id)
+            solicitud.fecha = data.get('fecha', solicitud.fecha)
+            solicitud.estado = data.get('estado', solicitud.estado)
+            solicitud.save()
+            return JsonResponse({"mensaje": "Solicitud actualizada"})
+        except Solicitud.DoesNotExist:
+            return JsonResponse({"error": "Solicitud no encontrada"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-def agregar_refugio(request):
+@csrf_exempt
+def eliminar_solicitud(request, id):
+    if request.method == 'DELETE':
+        try:
+            solicitud = Solicitud.objects.get(pk=id)
+            solicitud.delete()
+            return JsonResponse({"mensaje": "Solicitud eliminada"})
+        except Solicitud.DoesNotExist:
+            return JsonResponse({"error": "Solicitud no encontrada"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    """
-    Vista para agregar un refugio (solo admin).
-    - Si es POST, agrega un nuevo refugio con los datos del formulario.
-    """
+# ----------------------------
+# CRUD SEGUIMIENTOS
+# ----------------------------
+def listar_seguimientos(request):
+    if request.method == 'GET':
+        seguimientos = Seguimiento.objects.all().values()
+        return JsonResponse(list(seguimientos), safe=False)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    rol = request.GET.get("rol", "usuario")
-    if rol != "admin":
-        return redirect(f'/refugios/?rol={rol}')
+@csrf_exempt
+def crear_seguimiento(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            seguimiento = Seguimiento.objects.create(
+                solicitud_id=data['solicitud_id'],
+                fecha=data['fecha'],
+                observacion=data['observacion']
+            )
+            return JsonResponse({"mensaje": "Seguimiento creado", "id": seguimiento.id}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return render(request, "templatesApp/crear_seguimiento.html")
 
-    if request.method == "POST":
-        nueva_id = len(refugios_data) + 1
-        nombre = request.POST.get("nombre")
-        direccion = request.POST.get("direccion")
-        telefono = request.POST.get("telefono")
-        refugios_data.append({"id": nueva_id, "nombre": nombre, "direccion": direccion, "telefono": telefono})
-        return redirect(f'/refugios/?rol={rol}')
+@csrf_exempt
+def actualizar_seguimiento(request, id):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            seguimiento = Seguimiento.objects.get(pk=id)
+            seguimiento.solicitud_id = data.get('solicitud_id', seguimiento.solicitud_id)
+            seguimiento.fecha = data.get('fecha', seguimiento.fecha)
+            seguimiento.observacion = data.get('observacion', seguimiento.observacion)
+            seguimiento.save()
+            return JsonResponse({"mensaje": "Seguimiento actualizado"})
+        except Seguimiento.DoesNotExist:
+            return JsonResponse({"error": "Seguimiento no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    return render(request, "templatesApp/agregar_refugios.html", {"rol": rol})
-
-# ============================================================================
-
-def solicitudes(request):
-
-    """
-    Vista para mostrar todas las solicitudes de adopción.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    return render(request, "templatesApp/solicitudes.html", {"solicitudes": solicitudes_data, "rol": rol})
-
-# =============================================================================
-
-def enviar_solicitud(request):
-
-    """
-    Vista para que un usuario envíe una nueva solicitud de adopción.
-    - Solo usuarios pueden enviar solicitudes.
-    - Si es POST, agrega la solicitud a la lista.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    if rol != "usuario":
-        return redirect(f'/solicitudes/?rol={rol}')
-
-    if request.method == "POST":
-        nueva_id = len(solicitudes_data) + 1
-        nombre = request.POST.get("nombre")
-        mascota = request.POST.get("mascota")
-        comentarios = request.POST.get("comentarios")
-        solicitudes_data.append({"id": nueva_id, "nombre": nombre, "mascota": mascota, "comentarios": comentarios, "estado": "pendiente"})
-        return redirect(f'/solicitudes/?rol={rol}')
-
-    return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol})
-
-# ================================================================================
-
-def gestionar_solicitud(request, id, accion):
-
-    """
-    Vista para que el admin gestione solicitudes (aceptar/rechazar).
-    - Cambia el estado de la solicitud según la acción.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    if rol != "admin":
-        return redirect(f'/solicitudes/?rol={rol}')
-
-    for solicitud in solicitudes_data:
-        if solicitud["id"] == id:
-            if accion == "aceptar":
-                solicitud["estado"] = "aceptada"
-            elif accion == "rechazar":
-                solicitud["estado"] = "rechazada"
-            break
-
-    return redirect(f'/solicitudes/?rol={rol}')
-
-# =================================================================================
-
-def seguimientos(request):
-
-    """
-    Vista para que el admin vea todos los seguimientos.
-    - Solo accesible para admin.
-    """
-
-    rol = request.GET.get("rol", "usuario")
-    if rol != "admin":
-        return redirect(f'/menu/?rol={rol}')
-    return render(request, "templatesApp/seguimientos.html", {"seguimientos": seguimientos_data, "rol": rol})
-
+@csrf_exempt
+def eliminar_seguimiento(request, id):
+    if request.method == 'DELETE':
+        try:
+            seguimiento = Seguimiento.objects.get(pk=id)
+            seguimiento.delete()
+            return JsonResponse({"mensaje": "Seguimiento eliminado"})
+        except Seguimiento.DoesNotExist:
+            return JsonResponse({"error": "Seguimiento no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)

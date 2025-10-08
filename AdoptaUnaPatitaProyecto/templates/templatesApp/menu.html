@@ -11,17 +11,17 @@
     <img src="{% static 'img/MenuPrincipal.png' %}" class="MenuPrincipal">
     <ul class="menu-imagenes">
     
-        <a href="{% url 'mascotas' %}?rol={{ rol }}">
+        <a href="{% url 'listar_mascotas' %}?rol={{ rol }}">
             <img src="{% static 'img/VerMascotas.png' %}" class="VerMascotas" alt="Ver Mascotas">
         </a>
     
     
-        <a href="{% url 'refugios' %}?rol={{ rol }}">
+        <a href="{% url 'listar_refugios' %}?rol={{ rol }}">
             <img src="{% static 'img/VerRefugios.png' %}" class="VerRefugios" alt="Ver Refugios">
         </a>
     
    
-        <a href="{% url 'solicitudes' %}?rol={{ rol }}">
+        <a href="{% url 'listar_solicitudes' %}?rol={{ rol }}">
             <img src="{% static 'img/VerSolicitudes.png' %}" class="VerSolicitudes" alt="Ver Solicitudes">
             
         <a href="{% url 'login' %}">
@@ -30,7 +30,7 @@
 
     {% if rol == "admin" %}
     
-            <a href="{% url 'agregar_mascota' %}?rol={{ rol }}">
+            <a href="{% url 'crear_mascota' %}?rol={{ rol }}">
                 <img src="{% static 'img/AgregarMascotas.png' %}" class="AgregarMascotas" alt="Agregar Mascota">
                 
             </a>

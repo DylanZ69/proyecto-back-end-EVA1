@@ -1,37 +1,43 @@
 from django.urls import path
 from . import views
-# Importa path para definir URLs y views para asociar cada ruta con su función correspondiente
 
 urlpatterns = [
-    # ===========================
-    # Páginas principales
-    # ===========================
-    path('', views.index, name="index"),            # Página de inicio
-    path('login/', views.login_view, name="login"), # Página de login
-    path('menu/', views.menu, name="menu"),         # Menú principal según rol
+    # ----------------------------
+    # RUTAS HTML
+    # ----------------------------
+    path('', views.index, name='index'),
+    path('login/', views.login_view, name='login'),
+    path('menu/', views.menu, name='menu'),
+    # ----------------------------
+    # MASCOTAS
+    # ----------------------------
+    path('mascotas/', views.listar_mascotas, name='listar_mascotas'),
+    path('mascotas/<int:id>/', views.obtener_mascota, name='obtener_mascota'),
+    path('mascotas/crear/', views.crear_mascota, name='crear_mascota'),
+    path('mascotas/actualizar/<int:id>/', views.actualizar_mascota, name='actualizar_mascota'),
+    path('mascotas/eliminar/<int:id>/', views.eliminar_mascota, name='eliminar_mascota'),
 
-    # ===========================
-    # Rutas de mascotas
-    # ===========================
-    path('mascotas/', views.mascotas, name="mascotas"),                  # Lista de mascotas
-    path('mascotas/agregar/', views.agregar_mascota, name="agregar_mascota"), # Agregar nueva mascota (solo admin)
-    path('mascotas/eliminar/<int:id>/', views.eliminar_mascota, name="eliminar_mascota"), # Eliminar mascota por ID (solo admin)
+    # ----------------------------
+    # REFUGIOS
+    # ----------------------------
+    path('refugios/', views.listar_refugios, name='listar_refugios'),
+    path('refugios/crear/', views.crear_refugio, name='crear_refugio'),
+    path('refugios/actualizar/<int:id>/', views.actualizar_refugio, name='actualizar_refugio'),
+    path('refugios/eliminar/<int:id>/', views.eliminar_refugio, name='eliminar_refugio'),
 
-    # ===========================
-    # Rutas de refugios
-    # ===========================
-    path('refugios/', views.refugios, name="refugios"),                   # Lista de refugios
-    path('refugios/agregar/', views.agregar_refugio, name="agregar_refugio"), # Agregar refugio (solo admin)
+    # ----------------------------
+    # SOLICITUDES DE ADOPCIÓN
+    # ----------------------------
+    path('solicitudes/', views.listar_solicitudes, name='listar_solicitudes'),
+    path('solicitudes/crear/', views.crear_solicitud, name='crear_solicitud'),
+    path('solicitudes/actualizar/<int:id>/', views.actualizar_solicitud, name='actualizar_solicitud'),
+    path('solicitudes/eliminar/<int:id>/', views.eliminar_solicitud, name='eliminar_solicitud'),
 
-    # ===========================
-    # Rutas de solicitudes de adopción
-    # ===========================
-    path('solicitudes/', views.solicitudes, name="solicitudes"),                           # Lista de solicitudes
-    path('solicitudes/enviar/', views.enviar_solicitud, name="enviar_solicitud"),         # Enviar nueva solicitud (solo usuario)
-    path('solicitudes/gestionar/<int:id>/<str:accion>/', views.gestionar_solicitud, name="gestionar_solicitud"), # Aceptar o rechazar solicitud (solo admin)
-
-    # ===========================
-    # Rutas de seguimientos
-    # ===========================
-    path("seguimientos/", views.seguimientos, name="seguimientos"), # Lista de seguimientos (solo admin)
+    # ----------------------------
+    # SEGUIMIENTOS
+    # ----------------------------
+    path('seguimientos/', views.listar_seguimientos, name='listar_seguimientos'),
+    path('seguimientos/crear/', views.crear_seguimiento, name='crear_seguimiento'),
+    path('seguimientos/actualizar/<int:id>/', views.actualizar_seguimiento, name='actualizar_seguimiento'),
+    path('seguimientos/eliminar/<int:id>/', views.eliminar_seguimiento, name='eliminar_seguimiento'),
 ]
