@@ -11,7 +11,7 @@ urlpatterns = [
     # ----------------------------
     # MASCOTAS
     # ----------------------------
-    path('mascotas/', views.listar_mascotas, name='listar_mascotas'),
+    path('mascotas/', views.ver_mascotas, name='listar_mascotas'),
     path('mascotas/<int:id>/', views.obtener_mascota, name='obtener_mascota'),
     path('mascotas/crear/', views.crear_mascota, name='crear_mascota'),
     path('mascotas/actualizar/<int:id>/', views.actualizar_mascota, name='actualizar_mascota'),
@@ -20,6 +20,7 @@ urlpatterns = [
     # ----------------------------
     # REFUGIOS
     # ----------------------------
+    path('refugios/', views.ver_refugios, name='ver_refugios'),
     path('refugios/', views.listar_refugios, name='listar_refugios'),
     path('refugios/crear/', views.crear_refugio, name='crear_refugio'),
     path('refugios/actualizar/<int:id>/', views.actualizar_refugio, name='actualizar_refugio'),
@@ -28,6 +29,12 @@ urlpatterns = [
     # ----------------------------
     # SOLICITUDES DE ADOPCIÓN
     # ----------------------------
+    # urls.py
+    
+    path('solicitudes/', views.ver_solicitudes, name='ver_solicitudes'),
+    path('enviar_solicitud/', views.enviar_solicitud, name='enviar_solicitud'),
+    path('solicitudes/nueva/', views.enviar_solicitud, name='enviar_solicitud'),
+    path('solicitudes/', views.ver_solicitudes, name='ver_solicitudes'),
     path('solicitudes/', views.listar_solicitudes, name='listar_solicitudes'),
     path('solicitudes/crear/', views.crear_solicitud, name='crear_solicitud'),
     path('solicitudes/actualizar/<int:id>/', views.actualizar_solicitud, name='actualizar_solicitud'),

@@ -264,3 +264,299 @@ form{
 .volverrefugio:hover {
     transform: scale(1.1);         
 }
+/* Fondo y scroll */
+body {
+    background-image: url("/static/img/Adopta_una_Patitaa.jpg"); 
+    background-size: cover; 
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+body::-webkit-scrollbar {
+    display: none; 
+}
+
+.bodygeneral {
+    background-image: url("/static/img/fondo_login.jpg"); 
+    background-size: cover; 
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor principal */
+.mascotas-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 900px;
+    width: 90%;
+}
+
+/* Título */
+.mascotas-container h2 {
+    color: #ff6600;
+    margin-bottom: 20px;
+}
+
+/* Tabla */
+.mascotas-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.mascotas-container th, 
+.mascotas-container td {
+    border: 2px solid black;
+    padding: 10px;
+    font-size: 16px;
+    color: #000;
+}
+
+.mascotas-container th {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.mascotas-container td {
+    background-color: #fff;
+}
+
+/* Botones de acción */
+.mascotas-container a.boton-accion {
+    color: #fff;
+    background-color: #ff6600;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 0 2px;
+    font-weight: bold;
+}
+
+.mascotas-container a.boton-accion:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Botón Volver */
+.mascotas-container .volvermascotas {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.mascotas-container .volvermascotas:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+/* Contenedor exclusivo de solicitudes */
+.solicitudes-container {
+    background-color: white;
+    width: 80%;
+    max-width: 800px;
+    margin: 100px auto 50px auto; /* Centrado y separado del top */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+/* Tabla exclusiva de solicitudes */
+.solicitudes-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.solicitudes-container table, 
+.solicitudes-container th, 
+.solicitudes-container td {
+    border: 1px solid black;
+}
+
+.solicitudes-container th, 
+.solicitudes-container td {
+    padding: 10px;
+    text-align: center;
+}
+
+.solicitudes-container th {
+    background-color: #ff6600;
+    color: white;
+}
+
+/* Botones exclusivos para solicitudes */
+.solicitudes-container .AgregarSolicitud,
+.solicitudes-container .VolverSolicitud {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #ff6600;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.solicitudes-container .AgregarSolicitud:hover,
+.solicitudes-container .VolverSolicitud:hover {
+    background-color: #e65c00;
+}
+/* Contenedor general */
+.refugios-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Tabla */
+.refugios-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.refugios-container th, .refugios-container td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.refugios-container th {
+    background-color: #ff6600;
+    color: white;
+}
+
+/* Botones */
+.boton-agregar, .boton-volver {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.boton-agregar:hover, .boton-volver:hover {
+    background-color: #e55a00;
+}
+.boton-volver {
+    position: absolute; /* o relative según necesites */
+    top: 90px;
+    right: 20px;
+}
+/* style.css */
+
+/* Estilo general del body */
+body.bodygeneral {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Títulos */
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Tabla de refugios */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #ffbb00;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Botones generales */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ffbb00;
+}
+
+/* Botón "Agregar Refugio" */
+.boton-agregar {
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+/* Botón "Volver al menú" */
+.boton-volver {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+/* Formulario de refugios */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Mensajes */
+#mensaje {
+    text-align: center;
+    font-weight: bold;
+}
