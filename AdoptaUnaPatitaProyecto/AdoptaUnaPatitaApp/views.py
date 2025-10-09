@@ -40,11 +40,11 @@ def menu(request):
 # ----------------------------
 # CRUD MASCOTAS
 # ----------------------------
-def listar_mascotas(request):
-    if request.method == 'GET':
-        mascotas = Mascota.objects.all().values()
-        return JsonResponse(list(mascotas), safe=False)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+def ver_mascotas(request):
+    mascotas = Mascota.objects.all()  # <-- Importante: NO usar .values()
+    rol = request.GET.get("rol", "usuario")
+    return render(request, "templatesApp/mascotas.html", {"mascotas": mascotas, "rol": rol})
+
 
 def obtener_mascota(request, id):
     try:
@@ -79,21 +79,30 @@ def crear_mascota(request):
 
 @csrf_exempt
 def actualizar_mascota(request, id):
-    if request.method == 'PUT':
+    try:
+        mascota = Mascota.objects.get(pk=id)
+    except Mascota.DoesNotExist:
+        return JsonResponse({"error": "Mascota no encontrada"}, status=404)
+
+    if request.method == 'GET':
+        # Renderiza un formulario HTML para editar
+        rol = request.GET.get("rol", "usuario")
+        return render(request, "templatesApp/actualizar_mascota.html", {"mascota": mascota, "rol": rol})
+
+    elif request.method == 'PUT':
         try:
             data = json.loads(request.body)
-            mascota = Mascota.objects.get(pk=id)
             mascota.nombre = data.get('nombre', mascota.nombre)
-            mascota.especie = data.get('especie', mascota.especie)
             mascota.edad = data.get('edad', mascota.edad)
-            mascota.descripcion = data.get('descripcion', mascota.descripcion)
+            mascota.raza = data.get('raza', mascota.raza)
+            mascota.tipo = data.get('tipo', mascota.tipo)
             mascota.save()
             return JsonResponse({"mensaje": "Mascota actualizada"})
-        except Mascota.DoesNotExist:
-            return JsonResponse({"error": "Mascota no encontrada"}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
 
 @csrf_exempt
 def eliminar_mascota(request, id):
@@ -109,11 +118,47 @@ def eliminar_mascota(request, id):
 # ----------------------------
 # CRUD REFUGIOS
 # ----------------------------
+
+
+
+# ----------------------------
+# CRUD REFUGIOS ADAPTADO
+# ----------------------------
+def ver_refugios(request):
+    rol = request.GET.get("rol", "usuario")
+    refugios = Refugio.objects.all()
+    return render(request, "templatesApp/refugios.html", {"refugios": refugios, "rol": rol})
+
+@csrf_exempt
+def crear_refugio(request):
+    rol = request.GET.get("rol", "usuario")
+    if request.method == "POST":
+        # Tu código para guardar el refugio
+        pass
+    return render(request, "templatesApp/agregar_refugios.html", {"rol": rol})
+
+
+@csrf_exempt
+def eliminar_refugio(request, id):
+    if request.method == 'DELETE':
+        try:
+            refugio = Refugio.objects.get(pk=id)
+            refugio.delete()
+            return JsonResponse({"mensaje": "Refugio eliminado"})
+        except Refugio.DoesNotExist:
+            return JsonResponse({"error": "Refugio no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+
 def listar_refugios(request):
     if request.method == 'GET':
         refugios = Refugio.objects.all().values()
         return JsonResponse(list(refugios), safe=False)
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+def ver_refugios(request):
+    rol = request.GET.get("rol", "usuario")
+    refugios = Refugio.objects.all()
+    return render(request, "templatesApp/refugios.html", {"refugios": refugios, "rol": rol})
 
 @csrf_exempt
 def crear_refugio(request):
@@ -129,7 +174,7 @@ def crear_refugio(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
     else:
-        return render(request, "templatesApp/crear_refugio.html")
+        return render(request, "templatesApp/agregar_refugios.html")
 
 @csrf_exempt
 def actualizar_refugio(request, id):
@@ -160,28 +205,54 @@ def eliminar_refugio(request, id):
 # ----------------------------
 # CRUD SOLICITUDES DE ADOPCIÓN
 # ----------------------------
+
+# views.py
+def enviar_solicitud(request):
+    rol = request.GET.get("rol", "usuario")
+    return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol})
+
+
+def ver_solicitudes(request):
+    rol = request.GET.get("rol", "usuario")
+    solicitudes = Solicitud.objects.all()  # Opcional: solo si quieres mostrar
+    return render(request, "templatesApp/solicitudes.html", {"rol": rol, "solicitudes": solicitudes})
+
+
+
+
 def listar_solicitudes(request):
     if request.method == 'GET':
         solicitudes = Solicitud.objects.all().values()
         return JsonResponse(list(solicitudes), safe=False)
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
-@csrf_exempt
+
+
+
+
 def crear_solicitud(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
-            data = json.loads(request.body)
+            nombre_adoptante = request.POST.get("nombre_adoptante")
+            correo_adoptante = request.POST.get("correo_adoptante")
+            mascota = request.POST.get("mascota")  # Ahora acepta cualquier texto
+            estado = "Pendiente"
+
+            # Guardar la solicitud
             solicitud = Solicitud.objects.create(
-                nombre_adoptante=data['nombre_adoptante'],
-                mascota_id=data['mascota_id'],
-                fecha=data['fecha'],
-                estado=data['estado']
+                nombre_adoptante=nombre_adoptante,
+                correo_adoptante=correo_adoptante,
+                mascota=mascota,
+                estado=estado
             )
-            return JsonResponse({"mensaje": "Solicitud creada", "id": solicitud.id}, status=201)
+            return redirect("ver_solicitudes")  # Redirige a la lista de solicitudes
+
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            return render(request, "templatesApp/enviar_solicitud.html", {"error": f"Error al crear la solicitud: {e}"})
     else:
-        return render(request, "templatesApp/crear_solicitud.html")
+        return render(request, "templatesApp/enviar_solicitud.html")
+
+
 
 @csrf_exempt
 def actualizar_solicitud(request, id):

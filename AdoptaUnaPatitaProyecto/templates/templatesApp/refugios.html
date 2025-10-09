@@ -3,28 +3,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <img src="{% static 'img/listarefugios.png' %}" class="listarefugios" alt="listarefugios">
+    <title>Refugios</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="bodygeneral">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <div class="refugiostexto">
-    {% if refugios %}
-        <ul>
-            {% for refugio in refugios %}
-                <li>
-                    {{ refugio.id }} - {{ refugio.nombre }} - {{ refugio.direccion }} - {{ refugio.telefono }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay refugios registrados.</p>
-    {% endif %}
 
-    {% if rol == "admin" %}
-        <a href="{% url 'agregar_refugio' %}?rol={{ rol }}">Agregar Refugio</a>
-    {% endif %}
+<h2>Refugios</h2>
 
-    <br><a href="{% url 'menu' %}?rol={{ rol }}">Volver al menú</a>
-    </div>
+<!-- Botón para agregar un nuevo refugio -->
+<a href="{% url 'crear_refugio' %}?rol={{ rol }}">
+    <button class="btn-accion">Agregar Refugio</button>
+</a>
+
+<br><br>
+
+<!-- Tabla de refugios -->
+<table class="tabla-general">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for refugio in refugios %}
+        <tr>
+            <td>{{ refugio.id }}</td>
+            <td>{{ refugio.nombre }}</td>
+            <td>{{ refugio.direccion }}</td>
+            <td>{{ refugio.telefono }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No hay refugios registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+
+<!-- Botón para volver al menú -->
+<a href="{% url 'menu' %}?rol={{ rol }}">
+    <button class="btn-accion">Volver al Menú</button>
+</a>
+
 </body>
 </html>

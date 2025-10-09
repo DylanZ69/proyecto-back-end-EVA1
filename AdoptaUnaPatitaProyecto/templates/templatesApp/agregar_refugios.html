@@ -4,25 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Agregar Refugio</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="bodygeneral">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <form method="post">
-        {% csrf_token %}
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br><br>
 
-        <label>Dirección:</label>
-        <input type="text" name="direccion" required><br><br>
 
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" required><br><br>
 
-        <button type="submit">Guardar</button>
-    </form>
+<form id="formRefugio">
+    <label>Nombre:</label>
+    <input type="text" id="nombre" required>
 
-    <br><a href="{% url 'menu' %}?rol={{ rol }}">
-            <img src="{% static 'img/Volver.png' %}" class="volverrefugio" alt="volver">
-        </a>
+    <label>Dirección:</label>
+    <input type="text" id="direccion" required>
+
+    <label>Teléfono:</label>
+    <input type="text" id="telefono" required>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<p id="mensaje" style="color: green;"></p>
+
+<a href="{% url 'menu' %}?rol={{ rol }}">
+    <button class="boton-volver">Volver al Menú</button>
+</a>
+
+<script>
+document.getElementById("formRefugio").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {
+        nombre: document.getElementById("nombre").value,
+        direccion: document.getElementById("direccion").value,
+        telefono: document.getElementById("telefono").value
+    };
+
+    try {
+        const response = await fetch("{% url 'crear_refugio' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            document.getElementById("mensaje").textContent = "✅ Refugio creado correctamente.";
+            setTimeout(() => {
+                window.location.href = "{% url 'menu' %}?rol={{ rol }}";
+            }, 1500);
+        } else {
+            document.getElementById("mensaje").textContent = "❌ Error: " + (result.error || "No se pudo crear el refugio.");
+        }
+    } catch (error) {
+        document.getElementById("mensaje").textContent = "⚠️ Error de conexión con el servidor.";
+    }
+});
+</script>
+
 </body>
 </html>

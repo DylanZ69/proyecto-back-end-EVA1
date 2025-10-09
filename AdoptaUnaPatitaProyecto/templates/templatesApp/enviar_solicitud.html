@@ -4,25 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Enviar Solicitud</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="bodygeneral">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <div><form method="post">
-        {% csrf_token %}
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br><br>
 
-        <label>Mascota:</label>
-        <input type="text" name="mascota" required><br><br>
+    <div class="mascotas-container" style="margin-top: 0px;">
+        
 
-        <label>Comentarios:</label>
-        <textarea name="comentarios" required></textarea><br><br>
+        <form method="POST" action="{% url 'crear_solicitud' %}">
+            {% csrf_token %}
+            <label for="nombre_adoptante">Nombre del Adoptante:</label>
+            <input type="text" name="nombre_adoptante" id="nombre_adoptante" required>
 
-        <button type="submit">Enviar</button>
-    </form>
-    <br><a href="{% url 'mascotas' %}?rol={{ rol }}">
-            <img src="{% static 'img/volver.png' %}" class="volversolicitud" alt="volvermascotas">
-        </a>
+            <label for="correo_adoptante">Correo del Adoptante:</label>
+            <input type="email" name="correo_adoptante" id="correo_adoptante" required>
+
+            <label for="mascota">Nombre de la Mascota:</label>
+            <input type="text" name="mascota" id="mascota" required>
+
+            <button type="submit" class="AgregarMascotas">Enviar Solicitud</button>
+        </form>
+
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
+        </div>
     </div>
+
 </body>
 </html>

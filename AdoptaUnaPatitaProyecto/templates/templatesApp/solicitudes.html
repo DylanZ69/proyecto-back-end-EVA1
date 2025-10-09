@@ -3,35 +3,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <img src="{% static 'img/listasolicitudes.png' %}" class="listasolicitudes" alt="listasolicitudes">
+    <title>Solicitudes de Adopción</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="bodygeneral">
-    <h1></h1>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <div class="solicitudestexto">
-        {% if solicitudes %}
-        <ul>
-            {% for solicitud in solicitudes %}
-                <li>
-                    {{ solicitud.id }} - {{ solicitud.nombre }} - {{ solicitud.mascota }} - {{ solicitud.comentarios }} - Estado: {{ solicitud.estado }}
-                    {% if rol == "admin" %}
-                        <a href="{% url 'gestionar_solicitud' id=solicitud.id accion='aceptar' %}?rol={{ rol }}">Aceptar</a>
-                        <a href="{% url 'gestionar_solicitud' id=solicitud.id accion='rechazar' %}?rol={{ rol }}">Rechazar</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay solicitudes registradas.</p>
-    {% endif %}
 
-    {% if rol == "usuario" %}
-        <a href="{% url 'enviar_solicitud' %}?rol={{ rol }}">Enviar Solicitud</a>
-    {% endif %}
+    <div class="solicitudes-container">
+        <h2 style="text-align:center; color:#ff6600;">📄 Solicitudes de Adopción</h2>
 
-    <br><a href="{% url 'menu' %}?rol={{ rol }}">
-            <img src="{% static 'img/Volver.png' %}" class="volver" alt="volver">
-        </a>
+        <!-- Botón para agregar solicitud -->
+        <div style="text-align:center; margin-bottom:20px;">
+            <a href="{% url 'enviar_solicitud' %}?rol={{ rol }}" class="AgregarSolicitud">Agregar Solicitud</a>
+        </div>
+
+        <!-- Tabla de solicitudes -->
+        <table class="tabla-solicitudes" style="margin:auto; background-color:white; border-radius:10px; padding:10px;">
+            <thead>
+                <tr>
+                    <th>Nombre Adoptante</th>
+                    <th>Mascota</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solicitud in solicitudes %}
+                <tr>
+                    <td>{{ solicitud.nombre_adoptante }}</td>
+                    <td>{{ solicitud.mascota.nombre }}</td>
+                    <td>{{ solicitud.fecha }}</td>
+                    <td>{{ solicitud.estado }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No hay solicitudes aún</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botón para volver al menú -->
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver al Menú</a>
+        </div>
     </div>
+
 </body>
 </html>

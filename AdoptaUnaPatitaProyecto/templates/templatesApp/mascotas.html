@@ -1,30 +1,78 @@
 {% load static %}
-<body class="bodyGeneral">
-    
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Mascotas</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <img src="{% static 'img/listamascotas.png' %}" class="listamascotas" alt="listamascotas">
-    <div class="mascotastexto">
-        {% if mascotas %}
-        <ul>
-            {% for mascota in mascotas %}
-                <li>
-                    {{ mascota.id }} - {{ mascota.nombre }} - Edad: {{ mascota.edad }} - Raza: {{ mascota.raza }} - Tipo: {{ mascota.tipo }}
-                    {% if rol == "admin" %}
-                        <a href="{% url 'eliminar_mascota' id=mascota.id %}?rol={{ rol }}">Eliminar</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay mascotas registradas.</p>
-    {% endif %}
+</head>
+<body class="bodygeneral">
+
+<div class="mascotas-container">
+    <h2 style="text-align:center; color:#ff6600;">🐾 Lista de Mascotas</h2>
 
     {% if rol == "admin" %}
-        <a href="{% url 'agregar_mascota' %}?rol={{ rol }}">Agregar Mascota</a>
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'crear_mascota' %}?rol={{ rol }}" class="AgregarMascotas">Agregar Nueva Mascota</a>
+        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
+    </div>
+    {% else %}
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
+    </div>
     {% endif %}
-    
 
-    <br><a href="{% url 'menu' %}?rol={{ rol }}">Volver al menú</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Raza</th>
+                <th>Tipo</th>
+                {% if rol == "admin" %}
+                <th>Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for mascota in mascotas %}
+            <tr>
+                <td>{{ mascota.nombre }}</td>
+                <td>{{ mascota.edad }}</td>
+                <td>{{ mascota.raza }}</td>
+                <td>{{ mascota.tipo }}</td>
+                {% if rol == "admin" %}
+                <td>
+                    <a href="#" onclick="eliminarMascota({{ mascota.id }})" style="color:#ff6600; font-weight:bold;">🗑️ Eliminar</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
+<script>
+function eliminarMascota(id) {
+    if (!confirm("¿Estás seguro de eliminar esta mascota?")) return;
+
+    fetch(`/mascotas/eliminar/${id}/`, {
+        method: "DELETE",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Mascota eliminada correctamente");
+            location.reload();
+        } else {
+            response.json().then(data => alert("Error: " + (data.error || "No se pudo eliminar")));
+        }
+    })
+    .catch(() => alert("Error de conexión con el servidor"));
+}
+</script>
+
 </body>
+</html>

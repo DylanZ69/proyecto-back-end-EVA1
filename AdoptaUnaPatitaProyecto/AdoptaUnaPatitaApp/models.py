@@ -13,7 +13,6 @@ class Mascota(models.Model):
     def __str__(self):
         return self.nombre
 
-
 class Refugio(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -23,14 +22,13 @@ class Refugio(models.Model):
         return self.nombre
 
 
+
 class Solicitud(models.Model):
     usuario = models.CharField(max_length=100)
-    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
+    mascota = models.CharField(max_length=100)  # ahora es texto libre
     comentarios = models.TextField(blank=True)
     estado = models.CharField(max_length=50, default="Pendiente")
 
-    def __str__(self):
-        return f"Solicitud de {self.usuario} por {self.mascota.nombre}"
 
 
 class Seguimiento(models.Model):
