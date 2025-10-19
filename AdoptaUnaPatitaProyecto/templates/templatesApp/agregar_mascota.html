@@ -29,6 +29,7 @@
         <p id="mensaje" style="color: green; font-weight: bold;"></p>
 
         <br>
+        <!-- Botón Volver: pasa siempre el rol actual -->
         <a href="{% url 'menu' %}?rol={{ rol }}">
             <img src="{% static 'img/volver.png' %}" class="volvermascotas" alt="Volver">
         </a>
@@ -46,7 +47,7 @@
             };
 
             try {
-                const response = await fetch("{% url 'crear_mascota' %}", {
+                const response = await fetch("{% url 'crear_mascota' %}?rol={{ rol }}", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -59,6 +60,7 @@
 
                 if (response.ok) {
                     document.getElementById("mensaje").textContent = "✅ Mascota creada correctamente.";
+                    // Redirecciona al menú con el rol actual
                     setTimeout(() => {
                         window.location.href = "{% url 'menu' %}?rol={{ rol }}";
                     }, 1500);

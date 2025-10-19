@@ -46,8 +46,8 @@ form{
   width: 220px;
     cursor: pointer;
     position: relative;
-    bottom: -425px;
-    left: 842px;
+    bottom: -9px;
+    left: 10px;
     transition: transform 0.3s ease; 
 
     
@@ -226,8 +226,8 @@ form{
      width: 100px;
     cursor: pointer;
     position: relative;
-    top: 400px;
-    left: 900px;
+    top: 420px;
+    left: -20px;
     transition: transform 0.3s ease; 
 
 }
@@ -235,8 +235,8 @@ form{
     transform: scale(1.1);         
 }
 .agregarmascota{
-    width: 700px;
-    left: 20px;
+    width: 50px;
+    left: 70px;
     top: 100px;
     position: relative;
 }
@@ -560,3 +560,16 @@ form input {
     text-align: center;
     font-weight: bold;
 }
+.volversolicitud{
+     width: 100px;
+    cursor: pointer;
+    position: relative;
+    top: 700px;
+    left: 900px;
+    transition: transform 0.3s ease; 
+
+}
+.volversolicitud:hover {
+    transform: scale(1.1);         
+}
+

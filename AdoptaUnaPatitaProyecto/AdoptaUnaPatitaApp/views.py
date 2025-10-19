@@ -61,6 +61,7 @@ def obtener_mascota(request, id):
 
 @csrf_exempt
 def crear_mascota(request):
+    rol = request.GET.get("rol", "usuario")  # Captura el rol desde GET
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -74,8 +75,9 @@ def crear_mascota(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
     else:
-        # Muestra formulario si se accede por navegador (GET)
-        return render(request, "templatesApp/agregar_mascota.html")
+        # Renderiza el formulario con el rol
+        return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
+
 
 @csrf_exempt
 def actualizar_mascota(request, id):
