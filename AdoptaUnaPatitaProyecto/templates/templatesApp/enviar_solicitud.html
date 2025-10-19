@@ -8,27 +8,35 @@
 </head>
 <body class="bodygeneral">
 
-    <div class="mascotas-container" style="margin-top: 0px;">
-        
+<div class="mascotas-container" style="margin-top: 0px;">
+    
+    {% if error %}
+        <p style="color:red; font-weight:bold;">{{ error }}</p>
+    {% endif %}
 
-        <form method="POST" action="{% url 'crear_solicitud' %}">
-            {% csrf_token %}
-            <label for="nombre_adoptante">Nombre del Adoptante:</label>
-            <input type="text" name="nombre_adoptante" id="nombre_adoptante" required>
+    <form method="POST" action="{% url 'crear_solicitud' %}">
+        {% csrf_token %}
+        <label for="nombre_adoptante">Nombre del Adoptante:</label>
+        <input type="text" name="nombre_adoptante" id="nombre_adoptante" required>
 
-            <label for="correo_adoptante">Correo del Adoptante:</label>
-            <input type="email" name="correo_adoptante" id="correo_adoptante" required>
+        <label for="correo_adoptante">Correo del Adoptante:</label>
+        <input type="email" name="correo_adoptante" id="correo_adoptante" required>
 
-            <label for="mascota">Nombre de la Mascota:</label>
-            <input type="text" name="mascota" id="mascota" required>
+        <label for="mascota">Mascota:</label>
+        <select name="mascota" id="mascota" required>
+            <option value="">Selecciona una mascota</option>
+            {% for mascota in mascotas %}
+                <option value="{{ mascota.id }}">{{ mascota.nombre }} ({{ mascota.tipo }})</option>
+            {% endfor %}
+        </select>
 
-            <button type="submit" class="AgregarMascotas">Enviar Solicitud</button>
-        </form>
+        <button type="submit" class="AgregarMascotas">Enviar Solicitud</button>
+    </form>
 
-        <div style="text-align:center; margin-top:20px;">
-            <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
-        </div>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
     </div>
+</div>
 
 </body>
 </html>

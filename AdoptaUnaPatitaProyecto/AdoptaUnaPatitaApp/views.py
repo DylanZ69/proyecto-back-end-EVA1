@@ -209,7 +209,8 @@ def eliminar_refugio(request, id):
 # views.py
 def enviar_solicitud(request):
     rol = request.GET.get("rol", "usuario")
-    return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol})
+    mascotas = Mascota.objects.all()  # Trae todas las mascotas
+    return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol, "mascotas": mascotas})
 
 
 def ver_solicitudes(request):
@@ -235,25 +236,30 @@ def crear_solicitud(request):
         try:
             nombre_adoptante = request.POST.get("nombre_adoptante")
             correo_adoptante = request.POST.get("correo_adoptante")
-            mascota = request.POST.get("mascota")  # Ahora acepta cualquier texto
-            estado = "Pendiente"
+            mascota_id = request.POST.get("mascota")  # id de la mascota seleccionada
+            mascota = Mascota.objects.get(pk=mascota_id)
 
-            # Guardar la solicitud
+            # Crear la solicitud
             solicitud = Solicitud.objects.create(
                 nombre_adoptante=nombre_adoptante,
                 correo_adoptante=correo_adoptante,
                 mascota=mascota,
-                estado=estado
+                estado="Pendiente"
             )
+
             return redirect("ver_solicitudes")  # Redirige a la lista de solicitudes
 
         except Exception as e:
-            return render(request, "templatesApp/enviar_solicitud.html", {"error": f"Error al crear la solicitud: {e}"})
+            # Si hay error, vuelve a mostrar el form con mensaje
+            return render(request, "templatesApp/enviar_solicitud.html", {
+                "error": f"Error al crear la solicitud: {e}",
+                "mascotas": Mascota.objects.all(),
+                "rol": request.GET.get("rol", "usuario")
+            })
+
     else:
-        return render(request, "templatesApp/enviar_solicitud.html")
-
-
-
+        return redirect("enviar_solicitud")
+    
 @csrf_exempt
 def actualizar_solicitud(request, id):
     if request.method == 'PUT':
