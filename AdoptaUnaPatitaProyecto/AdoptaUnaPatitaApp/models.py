@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # ========================
 # MODELOS PRINCIPALES
@@ -13,6 +14,7 @@ class Mascota(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Refugio(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -24,11 +26,15 @@ class Refugio(models.Model):
 
 
 class Solicitud(models.Model):
-    usuario = models.CharField(max_length=100)
-    mascota = models.CharField(max_length=100)  # ahora es texto libre
+    nombre_adoptante = models.CharField(max_length=100)
+    correo_adoptante = models.EmailField()
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, null=True, blank=True)
     comentarios = models.TextField(blank=True)
-    estado = models.CharField(max_length=50, default="Pendiente")
+    estado = models.CharField(max_length=20, default="Pendiente")
+    fecha = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f"{self.nombre_adoptante} - {self.mascota.nombre}"
 
 
 class Seguimiento(models.Model):
