@@ -10,6 +10,8 @@ Antes de comenzar, asegúrate de tener instalado:
 - Python 3.12 o superior  
 - Git  
 - pip (administrador de paquetes de Python)  
+- pip install mysqlclient
+
 
 
 Instalación y Ejecución
