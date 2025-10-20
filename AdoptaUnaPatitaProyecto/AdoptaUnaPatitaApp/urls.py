@@ -7,6 +7,8 @@ urlpatterns = [
     # ----------------------------
     path('', views.index, name='index'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('registro/', views.registrar_usuario, name='registrar_usuario'),
     path('menu/', views.menu, name='menu'),
     # ----------------------------
     # MASCOTAS
@@ -34,7 +36,6 @@ urlpatterns = [
     path('solicitudes/', views.ver_solicitudes, name='ver_solicitudes'),
     path('enviar_solicitud/', views.enviar_solicitud, name='enviar_solicitud'),
     path('solicitudes/nueva/', views.enviar_solicitud, name='enviar_solicitud'),
-    path('solicitudes/', views.ver_solicitudes, name='ver_solicitudes'),
     path('solicitudes/', views.listar_solicitudes, name='listar_solicitudes'),
     path('solicitudes/crear/', views.crear_solicitud, name='crear_solicitud'),
     path('solicitudes/actualizar/<int:id>/', views.actualizar_solicitud, name='actualizar_solicitud'),

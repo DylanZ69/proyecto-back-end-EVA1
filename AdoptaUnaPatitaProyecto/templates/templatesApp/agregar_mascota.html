@@ -59,16 +59,16 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    document.getElementById("mensaje").textContent = "✅ Mascota creada correctamente.";
+                    document.getElementById("mensaje").textContent = "Mascota creada correctamente.";
                     // Redirecciona al menú con el rol actual
                     setTimeout(() => {
                         window.location.href = "{% url 'menu' %}?rol={{ rol }}";
                     }, 1500);
                 } else {
-                    document.getElementById("mensaje").textContent = "❌ Error: " + (result.error || "No se pudo crear la mascota.");
+                    document.getElementById("mensaje").textContent = " Error: " + (result.error || "No se pudo crear la mascota.");
                 }
             } catch (error) {
-                document.getElementById("mensaje").textContent = "⚠️ Error de conexión con el servidor.";
+                document.getElementById("mensaje").textContent = "Error de conexión con el servidor.";
             }
         });
     </script>

@@ -11,9 +11,11 @@
 <h2>Refugios</h2>
 
 <!-- Botón para agregar un nuevo refugio -->
+{% if rol == "admin" %}
 <a href="{% url 'crear_refugio' %}?rol={{ rol }}">
     <button class="btn-accion">Agregar Refugio</button>
 </a>
+{% endif %}
 
 <br><br>
 
@@ -25,19 +27,26 @@
             <th>Nombre</th>
             <th>Dirección</th>
             <th>Teléfono</th>
+            {% if rol == "admin" %}<th>Acciones</th>{% endif %}
         </tr>
     </thead>
     <tbody>
         {% for refugio in refugios %}
-        <tr>
+        <tr data-id="{{ refugio.id }}">
             <td>{{ refugio.id }}</td>
-            <td>{{ refugio.nombre }}</td>
-            <td>{{ refugio.direccion }}</td>
-            <td>{{ refugio.telefono }}</td>
+            <td class="nombre">{{ refugio.nombre }}</td>
+            <td class="direccion">{{ refugio.direccion }}</td>
+            <td class="telefono">{{ refugio.telefono }}</td>
+            {% if rol == "admin" %}
+            <td>
+                <a href="#" onclick="eliminar_refugio({{ refugio.id }})" style="color:#ff0000; font-weight:bold;">Eliminar</a> |
+                <a href="{% url 'actualizar_refugio' refugio.id %}?rol={{ rol }}" style="color:#00b7ff; font-weight:bold;">Editar</a>
+            </td>
+            {% endif %}
         </tr>
         {% empty %}
         <tr>
-            <td colspan="4">No hay refugios registrados.</td>
+            <td colspan="5">No hay refugios registrados.</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -50,5 +59,27 @@
     <button class="btn-accion">Volver al Menú</button>
 </a>
 
+<script>
+const csrftoken = '{{ csrf_token }}';
+
+// Función eliminar
+function eliminar_refugio(id){
+    if(!confirm('¿Seguro quieres eliminar este refugio?')) return;
+
+    fetch(`/refugios/eliminar/${id}/`, {
+        method: 'DELETE',
+        headers: {'X-CSRFToken': csrftoken}
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.mensaje){
+            alert(data.mensaje);
+            document.querySelector(`tr[data-id="${id}"]`).remove();
+        } else alert(data.error);
+    })
+    .catch(err => alert('Error: ' + err));
+}
+</script>
 </body>
 </html>
+

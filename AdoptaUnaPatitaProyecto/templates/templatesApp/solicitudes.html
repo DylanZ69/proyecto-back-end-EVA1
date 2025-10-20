@@ -30,7 +30,7 @@
                 {% for solicitud in solicitudes %}
                 <tr>
                     <td>{{ solicitud.nombre_adoptante }}</td>
-                    <td>{{ solicitud.mascota.nombre }}</td>
+                    <td>{{ solicitud.mascota_nombre }}</td>  <!-- <-- cambio aquí -->
                     <td>{{ solicitud.fecha }}</td>
                     <td>{{ solicitud.estado }}</td>
                 </tr>
