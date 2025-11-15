@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Agregar Mascota</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
 <body class="bodygeneral">
     <img src="{% static 'img/agregarmascota.png' %}" class="agregarmascota" alt="Agregar Mascota">
 
     <div>
-        <form id="formMascota">
+        <form id="formMascota" class="form-mascotaa">
+            
             <label>Nombre:</label>
             <input type="text" id="nombre" required><br><br>
 
@@ -24,9 +25,10 @@
             <input type="text" id="tipo" required><br><br>
 
             <button type="submit">Guardar</button>
-        </form>
 
-        <p id="mensaje" style="color: green; font-weight: bold;"></p>
+            <p id="mensaje" style="color:rgb(0, 255, 13); font-weight:bold; margin-top:10px;"></p>
+
+        </form>
 
         <br>
         <!-- Botón Volver: pasa siempre el rol actual -->
@@ -65,8 +67,8 @@
                         window.location.href = "{% url 'menu' %}?rol={{ rol }}";
                     }, 1500);
                 } else {
-                    document.getElementById("mensaje").textContent = " Error: " + (result.error || "No se pudo crear la mascota.");
-                }
+                    document.getElementById("mensaje").style.color = "red";
+                    document.getElementById("mensaje").textContent = result.error;}
             } catch (error) {
                 document.getElementById("mensaje").textContent = "Error de conexión con el servidor.";
             }

@@ -68,7 +68,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'adopta_patita_db',  
         'USER': 'root',              
-        'PASSWORD': '2015Anolia.',  
+        'PASSWORD': 'root',  
         'HOST': 'localhost',
         'PORT': '3306',
     }

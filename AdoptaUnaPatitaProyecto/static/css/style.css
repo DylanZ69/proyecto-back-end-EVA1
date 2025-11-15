@@ -24,20 +24,18 @@ body::-webkit-scrollbar {
     
 }
 form{
-    
     position: absolute;
     top: 280px;         
     left: 50%;          
     transform: translateX(-50%);
     background-color: rgba(255,255,255,0.8); 
-    padding: 50px 50px;   
+    padding: 50px 50px;    
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
-    gap: 6px;            
-    font-size: 18px;
-
+    gap: 4px;            
+    font-size: 15px;
 
 }
 
@@ -548,8 +546,8 @@ form label {
 }
 
 form input {
-    width: 100%;
-    padding: 8px;
+    width: 92%;    
+    padding: 5px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -573,3 +571,47 @@ form input {
     transform: scale(1.1);         
 }
 
+.form-mascotaa {
+    width: 350px;
+    padding: 10px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 10px;
+}
+
+.form-solicitud-container {
+    background-color: rgba(255,255,255,0.85);
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    width: 350px;
+    margin: 120px auto; 
+    text-align: center;
+}
+
+.form-solicitud-container form {
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 10px !important;
+}
+
+.formulariosolicitud {
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.error-solicitud {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: left;
+}

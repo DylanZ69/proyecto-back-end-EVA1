@@ -8,11 +8,17 @@
 </head>
 <body class="bodygeneral">
 
-<div class="mascotas-container" style="margin-top: 0px;">
+<div class="form-solicitud-container">
     
     {% if error %}
-        <p style="color:red; font-weight:bold;">{{ error }}</p>
-    {% endif %}
+        <div class="error-solicitud">
+            {% for campo, mensajes in error.items %}
+                {% for mensaje in mensajes %}
+                    <p>{{ mensaje }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %} 
 
     <form method="POST" action="{% url 'crear_solicitud' %}">
         {% csrf_token %}
@@ -30,7 +36,7 @@
             {% endfor %}
         </select>
 
-        <button type="submit" class="AgregarMascotas">Enviar Solicitud</button>
+        <button type="submit" class="formulariosolicitud">Enviar Solicitud</button>
     </form>
 
     <div style="text-align:center; margin-top:20px;">

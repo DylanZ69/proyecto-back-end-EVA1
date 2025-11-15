@@ -10,7 +10,7 @@
 
 
 
-<form id="formRefugio">
+<form id="formRefugio"class="form-mascotaa">
     <label>Nombre:</label>
     <input type="text" id="nombre" required>
 
@@ -21,9 +21,8 @@
     <input type="text" id="telefono" required>
 
     <button type="submit">Guardar</button>
+    <p id="mensaje" style="font-weight:bold; margin-top:15px;"></p>
 </form>
-
-<p id="mensaje" style="color: green;"></p>
 
 <a href="{% url 'menu' %}?rol={{ rol }}">
     <button class="boton-volver">Volver al Menú</button>
@@ -52,13 +51,15 @@ document.getElementById("formRefugio").addEventListener("submit", async function
         const result = await response.json();
 
         if (response.ok) {
-            document.getElementById("mensaje").textContent = "Refugio creado correctamente.";
+            document.getElementById("mensaje").style.color = "green";
+            document.getElementById("mensaje").textContent = "Refugio creado correctamente";
             setTimeout(() => {
                 window.location.href = "{% url 'menu' %}?rol={{ rol }}";
             }, 1500);
         } else {
-            document.getElementById("mensaje").textContent = "Error: " + (result.error || "No se pudo crear el refugio.");
-        }
+            document.getElementById("mensaje").style.color = "red";
+            document.getElementById("mensaje").textContent = result.error;}
+        
     } catch (error) {
         document.getElementById("mensaje").textContent = "Error de conexión con el servidor.";
     }

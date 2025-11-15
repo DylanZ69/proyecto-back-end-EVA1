@@ -4,7 +4,10 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Mascota, Refugio, Solicitud, Seguimiento, Usuario
 from .forms import UsuarioForm
 from .decorators import admin_required
+from .forms import MascotaForm 
+from .forms import SolicitudForm
 import json
+from .forms import RefugioForm
 
 
 
@@ -18,7 +21,7 @@ def index(request):
 def registrar_usuario(request):
     mensaje = ""
     if request.method == "POST":
-        form = UsuarioForm(request.POST)  # <-- usar el formulario, no el modelo directamente
+        form = UsuarioForm(request.POST) 
         if form.is_valid():
             rol_form = form.cleaned_data['rol']
 
@@ -55,9 +58,9 @@ def login_view(request):
 
                 # Redirigir según el rol
                 if usuario.rol == 'admin':
-                    return redirect('menu')  # o podrías redirigir a una vista llamada 'panel_admin'
+                    return redirect('menu')  
                 else:
-                    return redirect('menu')  # mismo menú pero se verá distinto según el rol
+                    return redirect('menu')  
             else:
                 mensaje = "Contraseña incorrecta"
         except Usuario.DoesNotExist:
@@ -80,7 +83,7 @@ def menu(request):
 # CRUD MASCOTAS
 # ----------------------------
 def ver_mascotas(request):
-    mascotas = Mascota.objects.all()  # <-- Importante: NO usar .values()
+    mascotas = Mascota.objects.all() 
     rol = request.session.get("rol", "usuario")
     return render(request, "templatesApp/mascotas.html", {"mascotas": mascotas, "rol": rol})
 
@@ -100,24 +103,23 @@ def obtener_mascota(request, id):
 
 @csrf_exempt
 @admin_required
-def crear_mascota(request):
-    rol = request.session.get("rol", "usuario")# Captura el rol desde GET
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            mascota = Mascota.objects.create(
-                nombre=data['nombre'],
-                edad=data['edad'],
-                raza=data['raza'],
-                tipo=data['tipo']
-            )
-            return JsonResponse({"mensaje": "Mascota creada", "id": mascota.id}, status=201)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-    else:
-        # Renderiza el formulario con el rol
-        return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
 
+def crear_mascota(request):
+    rol = request.session.get("rol", "usuario")
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        form = MascotaForm(data)
+
+        if form.is_valid():
+            mascota = form.save()
+            return JsonResponse({"mensaje": "Mascota creada", "id": mascota.id}, status=201)
+
+        else:
+            error_texto = list(form.errors.values())[0][0]
+            return JsonResponse({"error": error_texto}, status=400)
+
+    return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
 
 @csrf_exempt
 @admin_required
@@ -128,7 +130,6 @@ def actualizar_mascota(request, id):
         return JsonResponse({"error": "Mascota no encontrada"}, status=404)
 
     if request.method == 'GET':
-        # Renderiza un formulario HTML para editar
         rol = request.GET.get("rol", "usuario")
         return render(request, "templatesApp/actualizar_mascota.html", {"mascota": mascota, "rol": rol})
 
@@ -171,12 +172,19 @@ def ver_refugios(request):
 @csrf_exempt
 @admin_required
 def crear_refugio(request):
-    rol = request.session.get("rol", "usuario")
     if request.method == "POST":
-        # Tu código para guardar el refugio
-        pass
-    return render(request, "templatesApp/agregar_refugios.html", {"rol": rol})
+        data = json.loads(request.body)
+        form = RefugioForm(data)
 
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"mensaje": "Refugio creado"}, status=201)
+
+        else:
+            error_texto = list(form.errors.values())[0][0]
+            return JsonResponse({"error": error_texto}, status=400)
+
+    return render(request, "templatesApp/agregar_refugios.html")
 
 @csrf_exempt
 def listar_refugios(request):
@@ -185,22 +193,6 @@ def listar_refugios(request):
         return JsonResponse(list(refugios), safe=False)
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
-@csrf_exempt
-@admin_required
-def crear_refugio(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            refugio = Refugio.objects.create(
-                nombre=data['nombre'],
-                direccion=data['direccion'],
-                telefono=data['telefono']
-            )
-            return JsonResponse({"mensaje": "Refugio creado", "id": refugio.id}, status=201)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-    else:
-        return render(request, "templatesApp/agregar_refugios.html")
 
 @csrf_exempt
 @admin_required
@@ -244,16 +236,15 @@ def eliminar_refugio(request, id):
 # CRUD SOLICITUDES DE ADOPCIÓN
 # ----------------------------
 
-# views.py
 def enviar_solicitud(request):
     rol = request.session.get("rol", "usuario")
-    mascotas = Mascota.objects.all()  # Trae todas las mascotas
+    mascotas = Mascota.objects.all() 
     return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol, "mascotas": mascotas})
 
 
 def ver_solicitudes(request):
     rol = request.session.get("rol", "usuario")
-    solicitudes = Solicitud.objects.all()  # Opcional: solo si quieres mostrar
+    solicitudes = Solicitud.objects.all()
     return render(request, "templatesApp/solicitudes.html", {"rol": rol, "solicitudes": solicitudes})
 
 
@@ -267,31 +258,21 @@ def listar_solicitudes(request):
 
 def crear_solicitud(request):
     rol = request.session.get("rol", "usuario")
-    if request.method == "POST":
-        try:
-            nombre_adoptante = request.POST.get("nombre_adoptante")
-            correo_adoptante = request.POST.get("correo_adoptante")
-            mascota_id = request.POST.get("mascota")  # id seleccionado
-            mascota = Mascota.objects.get(pk=mascota_id)  # buscamos el nombre
 
-            solicitud = Solicitud.objects.create(
-                nombre_adoptante=nombre_adoptante,
-                correo_adoptante=correo_adoptante,
-                mascota_id=mascota.id,
-                mascota_nombre=mascota.nombre,
-                estado="Pendiente"
-            )
-            # Redirige a ver_solicitudes con rol
+    if request.method == "POST":
+        form = SolicitudForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect(f"/solicitudes/?rol={rol}")
-        except Exception as e:
+        else:
+            mascotas = Mascota.objects.all()
             return render(request, "templatesApp/enviar_solicitud.html", {
-                "error": f"Error al enviar solicitud: {e}",
-                "mascotas": Mascota.objects.all(),
+                "error": form.errors,
+                "mascotas": mascotas,
                 "rol": rol
             })
-    else:
-        return redirect(f"/enviar_solicitud/?rol={rol}")
 
+    return redirect(f"/enviar_solicitud/?rol={rol}")
 
 
 
@@ -306,7 +287,6 @@ def actualizar_solicitud(request, id):
             solicitud.comentarios = data.get('comentarios', solicitud.comentarios)
             solicitud.estado = data.get('estado', solicitud.estado)
 
-            # Si vienen datos de mascota
             if 'mascota_id' in data:
                 mascota = Mascota.objects.get(pk=data['mascota_id'])
                 solicitud.mascota_id = mascota.id

@@ -21,6 +21,7 @@
             <thead>
                 <tr>
                     <th>Nombre Adoptante</th>
+                    <th>Correo</th>
                     <th>Mascota</th>
                     <th>Fecha</th>
                     <th>Estado</th>
@@ -30,7 +31,8 @@
                 {% for solicitud in solicitudes %}
                 <tr>
                     <td>{{ solicitud.nombre_adoptante }}</td>
-                    <td>{{ solicitud.mascota_nombre }}</td>  <!-- <-- cambio aquí -->
+                    <td>{{ solicitud.correo_adoptante }}</td>
+                    <td>{{ solicitud.mascota_nombre }}</td>
                     <td>{{ solicitud.fecha }}</td>
                     <td>{{ solicitud.estado }}</td>
                 </tr>
@@ -42,7 +44,6 @@
             </tbody>
         </table>
 
-        <!-- Botón para volver al menú -->
         <div style="text-align:center; margin-top:20px;">
             <a href="{% url 'menu' %}?rol={{ rol }}" class="volversolicitudes">Volver al Menú</a>
         </div>
