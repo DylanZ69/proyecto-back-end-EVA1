@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Solicitud</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="bodygeneral">
+
+<div class="solicitudes-container">
+
+    <h2 style="text-align:center; color:red;">⚠️ Eliminar Solicitud</h2>
+
+    <p style="text-align:center;">
+        ¿Estás seguro de eliminar la solicitud de
+        <strong>{{ solicitud.nombre_adoptante }}</strong>?
+    </p>
+
+    <form method="POST" style="text-align:center;">
+        {% csrf_token %}
+        <button type="submit" style="background:red; color:white; font-weight:bold; padding:10px 20px;">
+            Sí, eliminar
+        </button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'ver_solicitudes' %}" style="color:#00b7ff; font-weight:bold;">
+            Cancelar
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Mascota, Refugio, Solicitud, Seguimiento, Usuario
+from .models import Mascota, Refugio, Solicitud, Usuario
 from .forms import UsuarioForm
 from .decorators import admin_required
 from .forms import MascotaForm 
 from .forms import SolicitudForm
 import json
 from .forms import RefugioForm
+from .forms import SolicitudPublicForm
 
 
 
@@ -80,85 +81,92 @@ def menu(request):
 
 
 # ----------------------------
-# CRUD MASCOTAS
+# CRUD MASCOTAS (HTML REAL)
 # ----------------------------
+
 def ver_mascotas(request):
-    mascotas = Mascota.objects.all() 
+    """Listado de mascotas"""
     rol = request.session.get("rol", "usuario")
-    return render(request, "templatesApp/mascotas.html", {"mascotas": mascotas, "rol": rol})
+    mascotas = Mascota.objects.all()
+    return render(request, "templatesApp/mascotas.html", {
+        "mascotas": mascotas,
+        "rol": rol
+    })
 
 
 def obtener_mascota(request, id):
-    try:
-        mascota = Mascota.objects.get(pk=id)
-        return JsonResponse({
-            "id": mascota.id,
-            "nombre": mascota.nombre,
-            "especie": mascota.especie,
-            "edad": mascota.edad,
-            "descripcion": mascota.descripcion
-        })
-    except Mascota.DoesNotExist:
-        return JsonResponse({"error": "Mascota no encontrada"}, status=404)
+    """Detalle de una mascota"""
+    mascota = get_object_or_404(Mascota, pk=id)
+    rol = request.session.get("rol", "usuario")
+    return render(request, "templatesApp/detalle_mascota.html", {
+        "mascota": mascota,
+        "rol": rol
+    })
 
-@csrf_exempt
+
 @admin_required
-
 def crear_mascota(request):
+    """Crear nueva mascota (solo admin)"""
     rol = request.session.get("rol", "usuario")
 
     if request.method == "POST":
-        data = json.loads(request.body)
-        form = MascotaForm(data)
-
+        form = MascotaForm(request.POST)
         if form.is_valid():
-            mascota = form.save()
-            return JsonResponse({"mensaje": "Mascota creada", "id": mascota.id}, status=201)
-
+            form.save()
+            messages.success(request, "Mascota creada correctamente.")
+            return redirect("listar_mascotas")
         else:
-            error_texto = list(form.errors.values())[0][0]
-            return JsonResponse({"error": error_texto}, status=400)
+            messages.error(request, "Hay errores en el formulario. Revisa los campos.")
+    else:
+        form = MascotaForm()
 
-    return render(request, "templatesApp/agregar_mascota.html", {"rol": rol})
+    return render(request, "templatesApp/agregar_mascota.html", {
+        "form": form,
+        "rol": rol
+    })
 
-@csrf_exempt
+
 @admin_required
 def actualizar_mascota(request, id):
-    try:
-        mascota = Mascota.objects.get(pk=id)
-    except Mascota.DoesNotExist:
-        return JsonResponse({"error": "Mascota no encontrada"}, status=404)
+    """Actualizar una mascota existente (solo admin)"""
+    mascota = get_object_or_404(Mascota, pk=id)
+    rol = request.session.get("rol", "usuario")
 
-    if request.method == 'GET':
-        rol = request.GET.get("rol", "usuario")
-        return render(request, "templatesApp/actualizar_mascota.html", {"mascota": mascota, "rol": rol})
+    if request.method == "POST":
+        form = MascotaForm(request.POST, instance=mascota)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Mascota actualizada correctamente.")
+            return redirect("listar_mascotas")
+        else:
+            messages.error(request, "Hay errores en el formulario. Corrígelos.")
+    else:
+        form = MascotaForm(instance=mascota)
 
-    elif request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            mascota.nombre = data.get('nombre', mascota.nombre)
-            mascota.edad = data.get('edad', mascota.edad)
-            mascota.raza = data.get('raza', mascota.raza)
-            mascota.tipo = data.get('tipo', mascota.tipo)
-            mascota.save()
-            return JsonResponse({"mensaje": "Mascota actualizada"})
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    return render(request, "templatesApp/actualizar_mascota.html", {
+        "form": form,
+        "mascota": mascota,
+        "rol": rol
+    })
 
 
-@csrf_exempt
 @admin_required
 def eliminar_mascota(request, id):
-    if request.method == 'DELETE':
-        try:
-            mascota = Mascota.objects.get(pk=id)
-            mascota.delete()
-            return JsonResponse({"mensaje": "Mascota eliminada"})
-        except Mascota.DoesNotExist:
-            return JsonResponse({"error": "Mascota no encontrada"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    """Eliminar una mascota (con confirmación y solo admin)"""
+    mascota = get_object_or_404(Mascota, pk=id)
+    rol = request.session.get("rol", "usuario")
+
+    if request.method == "POST":
+        mascota.delete()
+        messages.success(request, "Mascota eliminada correctamente.")
+        return redirect("listar_mascotas")
+
+    # GET: mostrar pantalla de confirmación
+    return render(request, "templatesApp/confirmar_eliminar_mascota.html", {
+        "mascota": mascota,
+        "rol": rol
+    })
+
 
 # ----------------------------
 # CRUD REFUGIOS
@@ -172,19 +180,22 @@ def ver_refugios(request):
 @csrf_exempt
 @admin_required
 def crear_refugio(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        form = RefugioForm(data)
+    rol = request.session.get("rol", "usuario")
 
+    if request.method == "POST":
+        form = RefugioForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({"mensaje": "Refugio creado"}, status=201)
+            messages.success(request, "Refugio agregado correctamente")
+            return redirect("ver_refugios")
+    else:
+        form = RefugioForm()
 
-        else:
-            error_texto = list(form.errors.values())[0][0]
-            return JsonResponse({"error": error_texto}, status=400)
+    return render(request, "templatesApp/agregar_refugios.html", {
+        "form": form,
+        "rol": rol
+    })
 
-    return render(request, "templatesApp/agregar_refugios.html")
 
 @csrf_exempt
 def listar_refugios(request):
@@ -197,174 +208,175 @@ def listar_refugios(request):
 @csrf_exempt
 @admin_required
 def actualizar_refugio(request, id):
-    try:
-        refugio = Refugio.objects.get(pk=id)
-    except Refugio.DoesNotExist:
-        return JsonResponse({"error": "Refugio no encontrado"}, status=404)
+    refugio = get_object_or_404(Refugio, pk=id)
+    rol = request.session.get("rol", "usuario")
 
-    if request.method == 'GET':
-        rol = request.session.get("rol", "usuario")
-        return render(request, "templatesApp/actualizar_refugio.html", {"refugio": refugio, "rol": rol})
+    if request.method == "POST":
+        form = RefugioForm(request.POST, instance=refugio)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Refugio actualizado correctamente.")
+            return redirect("ver_refugios")
+        else:
+            messages.error(request, "Corrige los errores del formulario.")
+    else:
+        # 👇 ESTA LÍNEA precarga los datos en el form
+        form = RefugioForm(instance=refugio)
 
-    elif request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            refugio.nombre = data.get('nombre', refugio.nombre)
-            refugio.direccion = data.get('direccion', refugio.direccion)
-            refugio.telefono = data.get('telefono', refugio.telefono)
-            refugio.save()
-            return JsonResponse({"mensaje": "Refugio actualizado"})
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+    return render(request, "templatesApp/actualizar_refugio.html", {
+        "form": form,
+        "refugio": refugio,
+        "rol": rol
+    })
 
-    return JsonResponse({"error": "Método no permitido"}, status=405)
 
 
 @csrf_exempt
 @admin_required
 def eliminar_refugio(request, id):
-    if request.method == 'DELETE':
-        try:
-            refugio = Refugio.objects.get(pk=id)
-            refugio.delete()
-            return JsonResponse({"mensaje": "Refugio eliminado"})
-        except Refugio.DoesNotExist:
-            return JsonResponse({"error": "Refugio no encontrado"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    refugio = get_object_or_404(Refugio, pk=id)
 
-# ----------------------------
-# CRUD SOLICITUDES DE ADOPCIÓN
-# ----------------------------
+    if request.method == "POST":
+        refugio.delete()
+        messages.success(request, "Refugio eliminado correctamente.")
+        return redirect("ver_refugios")
 
-def enviar_solicitud(request):
+    return render(request, "templatesApp/confirmar_eliminar_refugio.html", {
+        "refugio": refugio,
+        "rol": request.session.get("rol", "usuario")
+    })
+
+
+
+
+def detalle_refugio(request, id):
+    refugio = get_object_or_404(Refugio, pk=id)
     rol = request.session.get("rol", "usuario")
-    mascotas = Mascota.objects.all() 
-    return render(request, "templatesApp/enviar_solicitud.html", {"rol": rol, "mascotas": mascotas})
+    return render(request, "templatesApp/detalle_refugio.html", {
+        "refugio": refugio,
+        "rol": rol
+    })
 
+
+
+
+# ==============================
+# CRUD SOLICITUDES (HTML REAL)
+# ==============================
+
+from django.contrib import messages
 
 def ver_solicitudes(request):
     rol = request.session.get("rol", "usuario")
-    solicitudes = Solicitud.objects.all()
-    return render(request, "templatesApp/solicitudes.html", {"rol": rol, "solicitudes": solicitudes})
+    solicitudes = Solicitud.objects.all().order_by('-fecha')
+    return render(request, "templatesApp/solicitudes.html", {
+        "solicitudes": solicitudes,
+        "rol": rol
+    })
 
 
-
-
-def listar_solicitudes(request):
-    if request.method == 'GET':
-        solicitudes = Solicitud.objects.all().values()
-        return JsonResponse(list(solicitudes), safe=False)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
-
-def crear_solicitud(request):
+def detalle_solicitud(request, id):
     rol = request.session.get("rol", "usuario")
+    solicitud = get_object_or_404(Solicitud, pk=id)
+    return render(request, "templatesApp/detalle_solicitud.html", {
+        "solicitud": solicitud,
+        "rol": rol
+    })
+
+
+def enviar_solicitud(request):
+    rol = request.session.get("rol", "usuario")
+    mascotas = Mascota.objects.all()
 
     if request.method == "POST":
         form = SolicitudForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect(f"/solicitudes/?rol={rol}")
+
+            mascota = form.cleaned_data['mascota_fk']
+
+            Solicitud.objects.create(
+                nombre_adoptante=form.cleaned_data['nombre_adoptante'],
+                correo_adoptante=form.cleaned_data['correo_adoptante'],
+
+                mascota_fk=mascota,
+                mascota_id=mascota.id,
+                mascota_nombre=mascota.nombre
+            )
+
+            messages.success(request, "Solicitud enviada correctamente.")
+            return redirect("ver_solicitudes")   # ← FIX
+
         else:
-            mascotas = Mascota.objects.all()
+            messages.error(request, "Revisa los errores del formulario.")
             return render(request, "templatesApp/enviar_solicitud.html", {
-                "error": form.errors,
+                "form": form,
                 "mascotas": mascotas,
                 "rol": rol
             })
 
-    return redirect(f"/enviar_solicitud/?rol={rol}")
+    form = SolicitudForm()
+    return render(request, "templatesApp/enviar_solicitud.html", {
+        "form": form,
+        "mascotas": mascotas,
+        "rol": rol
+    })
 
 
 
-@csrf_exempt
+
+
 @admin_required
 def actualizar_solicitud(request, id):
-    if request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            solicitud = Solicitud.objects.get(pk=id)
-            solicitud.nombre_adoptante = data.get('nombre_adoptante', solicitud.nombre_adoptante)
-            solicitud.comentarios = data.get('comentarios', solicitud.comentarios)
-            solicitud.estado = data.get('estado', solicitud.estado)
+    solicitud = get_object_or_404(Solicitud, pk=id)
+    rol = request.session.get("rol", "usuario")
+    mascotas = Mascota.objects.all()
 
-            if 'mascota_id' in data:
-                mascota = Mascota.objects.get(pk=data['mascota_id'])
-                solicitud.mascota_id = mascota.id
-                solicitud.mascota_nombre = mascota.nombre
+    if request.method == "POST":
+        form = SolicitudForm(request.POST, instance=solicitud)
+        if form.is_valid():
+            mascota = form.cleaned_data['mascota_fk']
+
+            solicitud.nombre_adoptante = form.cleaned_data['nombre_adoptante']
+            solicitud.correo_adoptante = form.cleaned_data['correo_adoptante']
+            solicitud.mascota_fk = mascota
+            solicitud.mascota_id = mascota.id
+            solicitud.mascota_nombre = mascota.nombre
 
             solicitud.save()
-            return JsonResponse({"mensaje": "Solicitud actualizada"})
-        except Solicitud.DoesNotExist:
-            return JsonResponse({"error": "Solicitud no encontrada"}, status=404)
-        except Mascota.DoesNotExist:
-            return JsonResponse({"error": "Mascota no encontrada"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+            messages.success(request, "Solicitud actualizada correctamente.")
+            return redirect("ver_solicitudes")  # ← CORRECTO
+
+        else:
+            messages.error(request, "Corrige los errores del formulario.")
+
+    else:
+        form = SolicitudForm(instance=solicitud)
+
+    return render(request, "templatesApp/actualizar_solicitud.html", {
+        "form": form,
+        "solicitud": solicitud,
+        "mascotas": mascotas,
+        "rol": rol
+    })
 
 
-@csrf_exempt
+
+
 @admin_required
 def eliminar_solicitud(request, id):
-    if request.method == 'DELETE':
-        try:
-            solicitud = Solicitud.objects.get(pk=id)
-            solicitud.delete()
-            return JsonResponse({"mensaje": "Solicitud eliminada"})
-        except Solicitud.DoesNotExist:
-            return JsonResponse({"error": "Solicitud no encontrada"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    solicitud = get_object_or_404(Solicitud, pk=id)
 
-# ----------------------------
-# CRUD SEGUIMIENTOS
-# ----------------------------
-def listar_seguimientos(request):
-    if request.method == 'GET':
-        seguimientos = Seguimiento.objects.all().values()
-        return JsonResponse(list(seguimientos), safe=False)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    if request.method == "POST":
+        solicitud.delete()
+        messages.success(request, "Solicitud eliminada correctamente.")
+        return redirect("ver_solicitudes")
 
-@csrf_exempt
-@admin_required
-def crear_seguimiento(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            mascota = Mascota.objects.get(pk=data['mascota_id'])
-            seguimiento = Seguimiento.objects.create(
-                mascota_id=mascota.id,
-                mascota_nombre=mascota.nombre,
-                usuario=data['usuario'],
-                estado=data['estado']
-            )
-            return JsonResponse({"mensaje": "Seguimiento creado", "id": seguimiento.id}, status=201)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-
-@csrf_exempt
-@admin_required
-def actualizar_seguimiento(request, id):
-    if request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            seguimiento = Seguimiento.objects.get(pk=id)
-            seguimiento.mascota_id = data.get('mascota_id', seguimiento.mascota_id)
-            seguimiento.mascota_nombre = data.get('mascota_nombre', seguimiento.mascota_nombre)
-            seguimiento.usuario = data.get('usuario', seguimiento.usuario)
-            seguimiento.estado = data.get('estado', seguimiento.estado)
-            seguimiento.save()
-            return JsonResponse({"mensaje": "Seguimiento actualizado"})
-        except Seguimiento.DoesNotExist:
-            return JsonResponse({"error": "Seguimiento no encontrado"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    return render(request, "templatesApp/confirmar_eliminar_solicitud.html", {
+        "solicitud": solicitud,
+        "rol": request.session.get("rol", "usuario")
+    })
 
 
-@csrf_exempt
-@admin_required
-def eliminar_seguimiento(request, id):
-    if request.method == 'DELETE':
-        try:
-            seguimiento = Seguimiento.objects.get(pk=id)
-            seguimiento.delete()
-            return JsonResponse({"mensaje": "Seguimiento eliminado"})
-        except Seguimiento.DoesNotExist:
-            return JsonResponse({"error": "Seguimiento no encontrado"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+

@@ -6,65 +6,36 @@
     <title>Agregar Refugio</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body class="bodygeneral">
 
+<div class="mascotas-container">
 
+    <h2 style="text-align:center; color:#00b7ff;">Agregar Refugio</h2>
 
-<form id="formRefugio"class="form-mascotaa">
-    <label>Nombre:</label>
-    <input type="text" id="nombre" required>
+    {% if messages %}
+        <div style="text-align:center;">
+            {% for m in messages %}
+                <p style="color:red; font-weight:bold;">{{ m }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-    <label>Dirección:</label>
-    <input type="text" id="direccion" required>
+    <form method="POST" style="max-width:400px; margin:auto;">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <label>Teléfono:</label>
-    <input type="text" id="telefono" required>
+        <button type="submit" style="background:#00b7ff; color:white; font-weight:bold;">
+            Guardar
+        </button>
+    </form>
 
-    <button type="submit">Guardar</button>
-    <p id="mensaje" style="font-weight:bold; margin-top:15px;"></p>
-</form>
-
-<a href="{% url 'menu' %}?rol={{ rol }}">
-    <button class="boton-volver">Volver al Menú</button>
-</a>
-
-<script>
-document.getElementById("formRefugio").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const data = {
-        nombre: document.getElementById("nombre").value,
-        direccion: document.getElementById("direccion").value,
-        telefono: document.getElementById("telefono").value
-    };
-
-    try {
-        const response = await fetch("{% url 'crear_refugio' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            document.getElementById("mensaje").style.color = "green";
-            document.getElementById("mensaje").textContent = "Refugio creado correctamente";
-            setTimeout(() => {
-                window.location.href = "{% url 'menu' %}?rol={{ rol }}";
-            }, 1500);
-        } else {
-            document.getElementById("mensaje").style.color = "red";
-            document.getElementById("mensaje").textContent = result.error;}
-        
-    } catch (error) {
-        document.getElementById("mensaje").textContent = "Error de conexión con el servidor.";
-    }
-});
-</script>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'menu' %}?rol={{ rol }}">
+            <button class="boton-volver">Volver al Menú</button>
+        </a>
+    </div>
+</div>
 
 </body>
 </html>

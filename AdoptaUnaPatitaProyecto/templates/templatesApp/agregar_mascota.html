@@ -6,73 +6,35 @@
     <title>Agregar Mascota</title>
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
 </head>
+
 <body class="bodygeneral">
-    <img src="{% static 'img/agregarmascota.png' %}" class="agregarmascota" alt="Agregar Mascota">
 
-    <div>
-        <form id="formMascota" class="form-mascotaa">
-            
-            <label>Nombre:</label>
-            <input type="text" id="nombre" required><br><br>
+<div class="mascotas-container">
 
-            <label>Edad:</label>
-            <input type="number" id="edad" required><br><br>
+    <h2 style="text-align:center; color:#ff6600;">Agregar Mascota</h2>
 
-            <label>Raza:</label>
-            <input type="text" id="raza" required><br><br>
+    <!-- Mostrar errores -->
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red; text-align:center;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 
-            <label>Tipo:</label>
-            <input type="text" id="tipo" required><br><br>
+    <form method="POST" style="max-width:400px; margin:auto;">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
 
-            <button type="submit">Guardar</button>
+        <button type="submit" style="background:#00b7ff; color:white; font-weight:bold;">
+            Guardar
+        </button>
+    </form>
 
-            <p id="mensaje" style="color:rgb(0, 255, 13); font-weight:bold; margin-top:10px;"></p>
-
-        </form>
-
-        <br>
-        <!-- Botón Volver: pasa siempre el rol actual -->
-        <a href="{% url 'menu' %}?rol={{ rol }}">
-            <img src="{% static 'img/volver.png' %}" class="volvermascotas" alt="Volver">
-        </a>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
     </div>
 
-    <script>
-        document.getElementById("formMascota").addEventListener("submit", async function(e) {
-            e.preventDefault();
+</div>
 
-            const data = {
-                nombre: document.getElementById("nombre").value,
-                edad: parseInt(document.getElementById("edad").value),
-                raza: document.getElementById("raza").value,
-                tipo: document.getElementById("tipo").value,
-            };
-
-            try {
-                const response = await fetch("{% url 'crear_mascota' %}?rol={{ rol }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    document.getElementById("mensaje").textContent = "Mascota creada correctamente.";
-                    // Redirecciona al menú con el rol actual
-                    setTimeout(() => {
-                        window.location.href = "{% url 'menu' %}?rol={{ rol }}";
-                    }, 1500);
-                } else {
-                    document.getElementById("mensaje").style.color = "red";
-                    document.getElementById("mensaje").textContent = result.error;}
-            } catch (error) {
-                document.getElementById("mensaje").textContent = "Error de conexión con el servidor.";
-            }
-        });
-    </script>
 </body>
 </html>

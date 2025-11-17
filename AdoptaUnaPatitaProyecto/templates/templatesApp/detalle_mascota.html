@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Mascota</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bodygeneral">
+
+<div class="mascotas-container">
+    <h2 style="text-align:center; color:#ff9a57;">🐾 Detalle de Mascota</h2>
+
+    <table style="margin:auto; background:white; border-radius:10px; padding:15px;">
+        <tr><th>Nombre:</th><td>{{ mascota.nombre }}</td></tr>
+        <tr><th>Edad:</th><td>{{ mascota.edad }}</td></tr>
+        <tr><th>Raza:</th><td>{{ mascota.raza }}</td></tr>
+        <tr><th>Tipo:</th><td>{{ mascota.tipo }}</td></tr>
+
+        {% if mascota.refugio %}
+        <tr><th>Refugio:</th><td>{{ mascota.refugio.nombre }}</td></tr>
+        {% endif %}
+    </table>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'listar_mascotas' %}?rol={{ rol }}" class="volversolicitudes">
+            🔙 Volver a Mascotas
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

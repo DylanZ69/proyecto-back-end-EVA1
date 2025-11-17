@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Refugio</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bodygeneral">
+
+<div class="mascotas-container">
+    <h2 style="text-align:center; color:#00b7ff;">🏠 Detalle del Refugio</h2>
+
+    <table style="margin:auto; background:white; border-radius:10px; padding:15px;">
+        <tr><th>Nombre:</th><td>{{ refugio.nombre }}</td></tr>
+        <tr><th>Dirección:</th><td>{{ refugio.direccion }}</td></tr>
+        <tr><th>Teléfono:</th><td>{{ refugio.telefono }}</td></tr>
+    </table>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'ver_refugios' %}?rol={{ rol }}" class="volversolicitudes">
+            🔙 Volver a Refugios
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

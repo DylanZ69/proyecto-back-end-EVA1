@@ -8,18 +8,27 @@
 </head>
 <body class="bodygeneral">
 
-<h2>Refugios</h2>
+<h2 style="text-align:center;">Refugios</h2>
 
-<!-- Botón para agregar un nuevo refugio -->
-{% if rol == "admin" %}
-<a href="{% url 'crear_refugio' %}?rol={{ rol }}">
-    <button class="btn-accion">Agregar Refugio</button>
-</a>
+<!-- Mostrar mensajes Django -->
+{% if messages %}
+    <div style="text-align:center;">
+        {% for m in messages %}
+            <p style="color:red; font-weight:bold;">{{ m }}</p>
+        {% endfor %}
+    </div>
 {% endif %}
 
-<br><br>
+<!-- Botón agregar -->
+{% if rol == "admin" %}
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="{% url 'crear_refugio' %}?rol={{ rol }}">
+        <button class="btn-accion">Agregar Refugio</button>
+    </a>
+</div>
+{% endif %}
 
-<!-- Tabla de refugios -->
+<!-- Tabla -->
 <table class="tabla-general">
     <thead>
         <tr>
@@ -32,21 +41,29 @@
     </thead>
     <tbody>
         {% for refugio in refugios %}
-        <tr data-id="{{ refugio.id }}">
+        <tr>
             <td>{{ refugio.id }}</td>
-            <td class="nombre">{{ refugio.nombre }}</td>
-            <td class="direccion">{{ refugio.direccion }}</td>
-            <td class="telefono">{{ refugio.telefono }}</td>
+            <td>{{ refugio.nombre }}</td>
+            <td>{{ refugio.direccion }}</td>
+            <td>{{ refugio.telefono }}</td>
+            
             {% if rol == "admin" %}
             <td>
-                <a href="#" onclick="eliminar_refugio({{ refugio.id }})" style="color:#ff0000; font-weight:bold;">Eliminar</a> |
-                <a href="{% url 'actualizar_refugio' refugio.id %}?rol={{ rol }}" style="color:#00b7ff; font-weight:bold;">Editar</a>
+                <a href="{% url 'detalle_refugio' refugio.id %}?rol={{ rol }}" 
+                   style="color:green; font-weight:bold;">Ver</a>
+
+                <a href="{% url 'actualizar_refugio' refugio.id %}?rol={{ rol }}" 
+                   style="color:#00b7ff; font-weight:bold; margin-left:10px;">Editar</a>
+
+                <a href="{% url 'eliminar_refugio' refugio.id %}?rol={{ rol }}" 
+                   style="color:red; font-weight:bold; margin-left:10px;">Eliminar</a>
             </td>
             {% endif %}
         </tr>
+
         {% empty %}
         <tr>
-            <td colspan="5">No hay refugios registrados.</td>
+            <td colspan="5" style="text-align:center;">No hay refugios registrados.</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -54,32 +71,11 @@
 
 <br>
 
-<!-- Botón para volver al menú -->
-<a href="{% url 'menu' %}?rol={{ rol }}">
-    <button class="btn-accion">Volver al Menú</button>
-</a>
+<div style="text-align:center;">
+    <a href="{% url 'menu' %}?rol={{ rol }}">
+        <button class="btn-accion">Volver al Menú</button>
+    </a>
+</div>
 
-<script>
-const csrftoken = '{{ csrf_token }}';
-
-// Función eliminar
-function eliminar_refugio(id){
-    if(!confirm('¿Seguro quieres eliminar este refugio?')) return;
-
-    fetch(`/refugios/eliminar/${id}/`, {
-        method: 'DELETE',
-        headers: {'X-CSRFToken': csrftoken}
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.mensaje){
-            alert(data.mensaje);
-            document.querySelector(`tr[data-id="${id}"]`).remove();
-        } else alert(data.error);
-    })
-    .catch(err => alert('Error: ' + err));
-}
-</script>
 </body>
 </html>
-

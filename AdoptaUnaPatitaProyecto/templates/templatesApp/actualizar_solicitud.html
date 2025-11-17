@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Solicitud</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bodygeneral">
+
+<div class="solicitudes-container">
+
+    <h2 style="text-align:center; color:#ff6600;">✏️ Editar Solicitud</h2>
+
+    {% if messages %}
+        <div style="text-align:center;">
+            {% for m in messages %}
+                <p style="color:red; font-weight:bold;">{{ m }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" style="max-width:450px; margin:auto;">
+        {% csrf_token %}
+
+        <p>
+            <label>Nombre adoptante</label><br>
+            {{ form.nombre_adoptante }}
+        </p>
+
+        <p>
+            <label>Correo adoptante</label><br>
+            {{ form.correo_adoptante }}
+        </p>
+
+        <p>
+            <label>Mascota</label><br>
+            {{ form.mascota_fk }}
+        </p>
+
+        <button type="submit" style="background:#00b7ff; color:white; font-weight:bold;">
+            Guardar Cambios
+        </button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'ver_solicitudes' %}?rol={{ rol }}" class="volversolicitudes">
+            Volver
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

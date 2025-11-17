@@ -9,32 +9,26 @@
 <body class="bodygeneral">
 
 <div class="form-solicitud-container">
-    
-    {% if error %}
-        <div class="error-solicitud">
-            {% for campo, mensajes in error.items %}
-                {% for mensaje in mensajes %}
-                    <p>{{ mensaje }}</p>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {% endif %} 
 
-    <form method="POST" action="{% url 'crear_solicitud' %}">
+    <h2 style="text-align:center; color:#ff6600;">Enviar Solicitud de Adopción</h2>
+
+    <form method="POST">
         {% csrf_token %}
-        <label for="nombre_adoptante">Nombre del Adoptante:</label>
-        <input type="text" name="nombre_adoptante" id="nombre_adoptante" required>
 
-        <label for="correo_adoptante">Correo del Adoptante:</label>
-        <input type="email" name="correo_adoptante" id="correo_adoptante" required>
+        <p>
+            <label>Nombre Adoptante</label><br>
+            {{ form.nombre_adoptante }}
+        </p>
 
-        <label for="mascota">Mascota:</label>
-        <select name="mascota" id="mascota" required>
-            <option value="">Selecciona una mascota</option>
-            {% for mascota in mascotas %}
-                <option value="{{ mascota.id }}">{{ mascota.nombre }} ({{ mascota.tipo }})</option>
-            {% endfor %}
-        </select>
+        <p>
+            <label>Correo Adoptante</label><br>
+            {{ form.correo_adoptante }}
+        </p>
+
+        <p>
+            <label>Mascota</label><br>
+            {{ form.mascota_fk }}
+        </p>
 
         <button type="submit" class="formulariosolicitud">Enviar Solicitud</button>
     </form>
@@ -42,6 +36,7 @@
     <div style="text-align:center; margin-top:20px;">
         <a href="{% url 'menu' %}?rol={{ rol }}" class="volversolicitudes">Volver</a>
     </div>
+
 </div>
 
 </body>

@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Solicitud</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bodygeneral">
+
+<div class="solicitudes-container">
+    <h2 style="text-align:center; color:#ff6600;">📄 Detalle de Solicitud</h2>
+
+    <table style="margin:auto; background:white; border-radius:10px; padding:15px;">
+        <tr><th>Nombre adoptante:</th><td>{{ solicitud.nombre_adoptante }}</td></tr>
+        <tr><th>Correo:</th><td>{{ solicitud.correo_adoptante }}</td></tr>
+        <tr><th>Mascota:</th><td>{{ solicitud.mascota_nombre }}</td></tr>
+        <tr><th>Fecha:</th><td>{{ solicitud.fecha }}</td></tr>
+    </table>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'ver_solicitudes' %}?rol={{ rol }}" class="volversolicitudes">
+            🔙 Volver a Solicitudes
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -11,6 +11,15 @@
 <div class="mascotas-container">
     <h2 style="text-align:center; color:#ff9a57;">Lista de Mascotas</h2>
 
+    <!-- Mensajes Django -->
+    {% if messages %}
+        <div style="text-align:center;">
+            {% for m in messages %}
+                <p style="color:red; font-weight:bold;">{{ m }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% if rol == "admin" %}
     <div style="text-align:center; margin-bottom:20px;">
         <a href="{% url 'crear_mascota' %}?rol={{ rol }}" class="AgregarMascotas">Agregar Nueva Mascota</a>
@@ -29,6 +38,7 @@
                 <th>Edad</th>
                 <th>Raza</th>
                 <th>Tipo</th>
+                <th>Refugio</th>
                 {% if rol == "admin" %}
                 <th>Acciones</th>
                 {% endif %}
@@ -41,64 +51,30 @@
                 <td>{{ mascota.edad }}</td>
                 <td>{{ mascota.raza }}</td>
                 <td>{{ mascota.tipo }}</td>
+                <td>{{ mascota.refugio.nombre }}</td>
+
                 {% if rol == "admin" %}
                 <td>
-                    <a href="#" onclick="eliminar_mascota({{ mascota.id }})" style="color:#ff0000; font-weight:bold;"> Eliminar</a>
-                    <a href="#" onclick="actualizar_mascota({{ mascota.id }})" style="color:#00b7ff; font-weight:bold;"> Editar</a>
+                    <a href="{% url 'obtener_mascota' mascota.id %}?rol={{ rol }}" 
+                       style="color:#28a745; font-weight:bold;">Ver</a>
+
+                    <a href="{% url 'actualizar_mascota' mascota.id %}?rol={{ rol }}" 
+                       style="color:#00b7ff; font-weight:bold; margin-left:10px;">
+                       Editar
+                    </a>
+
+                    <a href="{% url 'eliminar_mascota' mascota.id %}?rol={{ rol }}" 
+                       style="color:red; font-weight:bold; margin-left:10px;">
+                       Eliminar
+                    </a>
                 </td>
                 {% endif %}
+
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-
-<script>
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-const csrftoken = getCookie('csrftoken');
-
-function eliminar_mascota(id) {
-    if (!confirm('¿Seguro quieres eliminar esta mascota?')) return;
-
-    fetch(`/mascotas/eliminar/${id}/`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.mensaje) {
-            alert(data.mensaje);
-            location.reload();
-        } else if (data.error) {
-            alert('Error: ' + data.error);
-        }
-    })
-    .catch(err => alert('Error al eliminar: ' + err));
-}
-
-function actualizar_mascota(id) {
-    // Redirige al formulario de edición
-    window.location.href = `/mascotas/actualizar/${id}/?rol={{ rol }}`;
-}
-</script>
-
 
 </body>
 </html>

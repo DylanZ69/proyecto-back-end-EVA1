@@ -5,7 +5,7 @@ class MascotaForm(forms.ModelForm):
 
     class Meta:
         model = Mascota
-        fields = ['nombre', 'edad', 'raza', 'tipo']
+        fields = ['nombre', 'edad', 'raza', 'tipo','refugio']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -49,13 +49,29 @@ class RefugioForm(forms.ModelForm):
 class SolicitudForm(forms.ModelForm):
     class Meta:
         model = Solicitud
-        fields = ['nombre_adoptante','correo_adoptante', 'mascota_id','mascota_nombre']
+        fields = [
+            'nombre_adoptante',
+            'correo_adoptante',
+            'mascota_fk',
+        ]
+
+        widgets = {
+            'mascota_fk': forms.Select(),
+        }
 
     def clean_nombre_adoptante(self):
         nombre = self.cleaned_data.get('nombre_adoptante')
-        if any(char.isdigit() for char in nombre):
-            raise forms.ValidationError("El nombre no puede contener números")
+        if any(c.isdigit() for c in nombre):
+            raise forms.ValidationError("El nombre no puede contener números.")
         return nombre
+
+
+    
+class SolicitudPublicForm(forms.Form):
+    nombre_adoptante = forms.CharField(max_length=100)
+    correo_adoptante = forms.EmailField()
+    mascota = forms.ModelChoiceField(queryset=Mascota.objects.all())
+
 
 class UsuarioForm(forms.ModelForm):
     password = forms.CharField(
@@ -77,5 +93,7 @@ class UsuarioForm(forms.ModelForm):
         if Usuario.objects.filter(username=username).exists():
             raise forms.ValidationError("El usuario ya existe")
         return username
-    
-    
+
+
+   
+   
