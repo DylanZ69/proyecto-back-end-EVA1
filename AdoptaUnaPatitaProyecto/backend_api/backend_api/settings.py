@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_spectacular',
-    'api'
+    'api.apps.ApiConfig',
 ]
 
 INSTALLED_APPS += ["rest_framework.authtoken"]
