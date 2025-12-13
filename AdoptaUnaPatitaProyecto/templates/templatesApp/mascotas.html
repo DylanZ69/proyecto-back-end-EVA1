@@ -20,16 +20,10 @@
         </div>
     {% endif %}
 
-    {% if rol == "admin" %}
     <div style="text-align:center; margin-bottom:20px;">
-        <a href="{% url 'crear_mascota' %}?rol={{ rol }}" class="AgregarMascotas">Agregar Nueva Mascota</a>
-        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
+        <a href="{% url 'crear_mascota' %}" class="AgregarMascotas">Agregar Nueva Mascota</a>
+        <a href="{% url 'menu' %}" class="volvermascotas">Volver</a>
     </div>
-    {% else %}
-    <div style="text-align:center; margin-bottom:20px;">
-        <a href="{% url 'menu' %}?rol={{ rol }}" class="volvermascotas">Volver</a>
-    </div>
-    {% endif %}
 
     <table>
         <thead>
@@ -39,9 +33,7 @@
                 <th>Raza</th>
                 <th>Tipo</th>
                 <th>Refugio</th>
-                {% if rol == "admin" %}
                 <th>Acciones</th>
-                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -51,25 +43,23 @@
                 <td>{{ mascota.edad }}</td>
                 <td>{{ mascota.raza }}</td>
                 <td>{{ mascota.tipo }}</td>
-                <td>{{ mascota.refugio.nombre }}</td>
+                <td>{{ mascota.refugio_nombre }}</td>
 
-                {% if rol == "admin" %}
                 <td>
-                    <a href="{% url 'obtener_mascota' mascota.id %}?rol={{ rol }}" 
-                       style="color:#28a745; font-weight:bold;">Ver</a>
-
-                    <a href="{% url 'actualizar_mascota' mascota.id %}?rol={{ rol }}" 
-                       style="color:#00b7ff; font-weight:bold; margin-left:10px;">
+                    <a href="{% url 'actualizar_mascota' mascota.id %}"
+                       style="color:#00b7ff; font-weight:bold;">
                        Editar
                     </a>
 
-                    <a href="{% url 'eliminar_mascota' mascota.id %}?rol={{ rol }}" 
+                    <a href="{% url 'eliminar_mascota' mascota.id %}"
                        style="color:red; font-weight:bold; margin-left:10px;">
                        Eliminar
                     </a>
                 </td>
-                {% endif %}
-
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;">No hay mascotas registradas.</td>
             </tr>
             {% endfor %}
         </tbody>

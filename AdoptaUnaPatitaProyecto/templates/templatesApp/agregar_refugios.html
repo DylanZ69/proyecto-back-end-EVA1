@@ -23,7 +23,21 @@
 
     <form method="POST" style="max-width:400px; margin:auto;">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <p>
+            <label>Nombre</label><br>
+            <input type="text" name="nombre" required>
+        </p>
+
+        <p>
+            <label>Dirección</label><br>
+            <input type="text" name="direccion" required>
+        </p>
+
+        <p>
+            <label>Teléfono</label><br>
+            <input type="text" name="telefono" required>
+        </p>
 
         <button type="submit" style="background:#00b7ff; color:white; font-weight:bold;">
             Guardar
@@ -31,8 +45,8 @@
     </form>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'menu' %}?rol={{ rol }}">
-            <button class="boton-volver">Volver al Menú</button>
+        <a href="{% url 'ver_refugios' %}">
+            <button class="boton-volver">Volver</button>
         </a>
     </div>
 </div>

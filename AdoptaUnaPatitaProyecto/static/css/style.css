@@ -1,617 +1,408 @@
-body {
-    background-image: url("/static/img/Adopta_una_Patitaa.jpg"); 
-    background-size: cover; 
-    background-attachment: fixed;
-    display: block;
-    align-items: center;
-    
-    overflow-y: scroll;      
-    overflow: hidden;
-    
-    
+/* =========================================================
+   0) BASE / FONDOS / SCROLL
+   ========================================================= */
+body{
+  background-image: url("/static/img/Adopta_una_Patitaa.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-body::-webkit-scrollbar {
-    display: none; 
+
+body::-webkit-scrollbar{
+  display: none;
 }
-.bodygeneral {
-    background-image: url("/static/img/fondo_login.jpg"); 
-    background-size: cover; 
-    background-attachment: fixed;
-    display: block;
-    align-items: center;
-    
-    
-    
+
+/* Fondo general para pantallas (login, CRUD, etc.) */
+.bodygeneral{
+  background-image: url("/static/img/fondo_login.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 20px;
 }
+
+/* =========================================================
+   1) LOGIN (FORM BASE)
+   ========================================================= */
 form{
-    position: absolute;
-    top: 280px;         
-    left: 50%;          
-    transform: translateX(-50%);
-    background-color: rgba(255,255,255,0.8); 
-    padding: 50px 50px;    
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;            
-    font-size: 15px;
-
+  position: absolute;
+  top: 280px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255,255,255,0.8);
+  padding: 50px 50px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
 }
 
-
-.login {
+.login{
   width: 220px;
-    cursor: pointer;
-    position: relative;
-    bottom: -9px;
-    left: 10px;
-    transition: transform 0.3s ease; 
+  cursor: pointer;
+  position: relative;
+  bottom: -9px;
+  left: 10px;
+  transition: transform 0.3s ease;
+}
+.login:hover{
+  transform: scale(1.1);
+}
 
-    
+#mensaje{
+  text-align: center;
+  font-weight: bold;
+  color: red;
 }
-.login:hover {
-    transform: scale(1.1);         
-}
+
+/* =========================================================
+   2) MENÚ (IMÁGENES + HOVERS)
+   ========================================================= */
 .menufondo{
-    background-image: url("/static/img/fondo_login.jpg"); 
-    background-size: cover; 
-    background-attachment: fixed;
-    display: block;
-    align-items: center;
-    
-
-}
-
-.VerMascotas{
-     width: 280px;
-    cursor: pointer;
-    position: relative;
-    bottom: 89px;
-    left: 25%;
-    transition: transform 0.3s ease; 
-
-}.VerMascotas:hover {
-    transform: scale(1.1);         
-}
-.VerRefugios{
-     width: 280px;
-    cursor: pointer;
-    position: relative;
-    bottom: 89px;
-    left: 41%;
-    transition: transform 0.3s ease; 
-
-
-}
-.VerRefugios:hover {
-    transform: scale(1.1);         
-}
-.VerSolicitudes{
-    width: 280px;
-    cursor: pointer;
-    position: relative;
-    bottom: 89px;
-    left: 10%;
-    transition: transform 0.3s ease; 
-
-}
-.VerSolicitudes:hover {
-    transform: scale(1.1);         
-}
-
-.AgregarMascotas{
-     width: 280px;
-    cursor: pointer;
-    position: relative;
-    bottom: 1px;
-    left: -20.4%;
-    transition: transform 0.3s ease; 
-
-}
-.AgregarMascotas:hover {
-    transform: scale(1.1);         
-}
-.CerrarSesion{
-    width: 280px;
-    cursor: pointer;
-    position: relative;
-    bottom: 285px;
-    left: -62%;
-    transition: transform 0.3s ease; 
-
-}
-.CerrarSesion:hover {
-    transform: scale(1.1);         
+  background-image: url("/static/img/fondo_login.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 .MenuPrincipal{
-
-    width: 650px;
-    position: relative;
-    bottom: -70px;
-    left: 592px;
-}
-.mascotastexto {
-    font-size:larger;
-    color: rgb(0, 0, 0);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 3px solid black;  
-    padding: 15px;             
-    border-radius: 15px;       
-    background-color: white; 
-    display: inline-block;     
-
-     width: 650px;
-    position: relative;
-    bottom:-230px;
-    left: 112px;
+  width: 650px;
+  position: relative;
+  bottom: -70px;
+  left: 592px;
 }
 
+.VerMascotas,
+.VerRefugios,
+.VerSolicitudes,
+.AgregarMascotas,
+.CerrarSesion{
+  width: 280px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.VerMascotas:hover,
+.VerRefugios:hover,
+.VerSolicitudes:hover,
+.AgregarMascotas:hover,
+.CerrarSesion:hover{
+  transform: scale(1.1);
+}
+
+/* Posiciones (mantengo tus coords para no romper el diseño actual) */
+.VerMascotas{ position: relative; bottom: 89px; left: 25%; }
+.VerRefugios{ position: relative; bottom: 89px; left: 41%; }
+.VerSolicitudes{ position: relative; bottom: 89px; left: 10%; }
+.AgregarMascotas{ position: relative; bottom: 1px; left: -20.4%; }
+.CerrarSesion{ position: relative; bottom: 285px; left: -62%; }
+
+/* =========================================================
+   3) CONTENEDORES (CRUD)
+   ========================================================= */
+.mascotas-container{
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+  max-width: 900px;
+  width: 90%;
+  margin: 40px auto;
+}
+
+.solicitudes-container{
+  background-color: white;
+  width: 80%;
+  max-width: 800px;
+  margin: 100px auto 50px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.refugios-container{
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 25px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Títulos dentro de contenedores */
+.mascotas-container h2{
+  color: #ff6600;
+  margin-bottom: 20px;
+}
+
+/* =========================================================
+   4) TABLAS (GENÉRICAS + ESPECÍFICAS)
+   ========================================================= */
+table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.mascotas-container table{
+  margin-top: 10px;
+}
+
+.mascotas-container th,
+.mascotas-container td{
+  border: 2px solid black;
+  padding: 10px;
+  font-size: 16px;
+  color: #000;
+}
+.mascotas-container th{
+  background-color: #ff6600;
+  color: #fff;
+}
+.mascotas-container td{
+  background-color: #fff;
+}
+
+.solicitudes-container table,
+.solicitudes-container th,
+.solicitudes-container td{
+  border: 1px solid black;
+}
+.solicitudes-container th,
+.solicitudes-container td{
+  padding: 10px;
+  text-align: center;
+}
+.solicitudes-container th{
+  background-color: #ff6600;
+  color: white;
+}
+
+.refugios-container th, .refugios-container td{
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+.refugios-container th{
+  background-color: #ff6600;
+  color: white;
+}
+
+/* Hover fila */
+table tr:hover{
+  background-color: #f1f1f1;
+}
+
+/* =========================================================
+   5) BOTONES / LINKS
+   ========================================================= */
+.btn-accion{
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.boton-agregar,
+.boton-volver{
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff6600;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.boton-agregar:hover,
+.boton-volver:hover{
+  background-color: #e55a00;
+}
+
+/* Botón volver con posición (si lo estás usando así) */
+.boton-volver{
+  position: absolute;
+  top: 90px;
+  right: 20px;
+}
+
+/* Acciones tipo link */
+.mascotas-container a.boton-accion{
+  color: #fff;
+  background-color: #ff6600;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin: 0 2px;
+  font-weight: bold;
+}
+.mascotas-container a.boton-accion:hover{
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Botones de solicitudes */
+.solicitudes-container .AgregarSolicitud,
+.solicitudes-container .VolverSolicitud{
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #ff6600;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.solicitudes-container .AgregarSolicitud:hover,
+.solicitudes-container .VolverSolicitud:hover{
+  background-color: #e65c00;
+}
+
+/* =========================================================
+   6) FORMULARIOS ESPECÍFICOS (Solicitud)
+   ========================================================= */
+.form-solicitud-container{
+  background-color: rgba(255,255,255,0.85);
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  width: 350px;
+  margin: 120px auto;
+  text-align: center;
+}
+
+/* IMPORTANTE: evita que el form general "absoluto" rompa este formulario */
+.form-solicitud-container form{
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  left: auto !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 10px !important;
+}
+
+.formulariosolicitud{
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.error-solicitud{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* =========================================================
+   7) CLASES VIEJAS (NO CRÍTICAS) - se mantienen por compatibilidad
+   ========================================================= */
+.mascotastexto,
+.solicitudestexto,
+.refugiostexto{
+  font-size: larger;
+  color: rgb(0, 0, 0);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 3px solid black;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: white;
+  display: inline-block;
+  width: 650px;
+}
+
+.mascotastexto{ position: relative; bottom:-230px; left: 112px; }
+.solicitudestexto{ position: relative; bottom: -60px; left: 32%; }
+.refugiostexto{ position: relative; bottom:-240px; left: 112px; }
+
+.listamascotas{ width: 500px; position: relative; bottom: -150px; left: 37%; }
+.listasolicitudes{ width: 500px; position: relative; bottom: -170px; left: 37%; }
+.listarefugios{ width: 500px; position: relative; bottom: -180px; left: 37%; }
 
 .volver{
-     width: 100px;
-    cursor: pointer;
-    position: relative;
-    bottom: 1px;
-    left: -1%;
-    transition: transform 0.3s ease; 
+  width: 100px;
+  cursor: pointer;
+  position: relative;
+  bottom: 1px;
+  left: -1%;
+  transition: transform 0.3s ease;
+}
+.volver:hover{ transform: scale(1.1); }
 
-}
-.volver:hover {
-    transform: scale(1.1);         
-}
-.listamascotas {
-     width: 500px;
-    cursor: pointer;
-    position: relative;
-    bottom: -150px;
-    left: 37%;
-}
-.listasolicitudes {
-    width: 500px;
-    cursor: pointer;
-    position: relative;
-    bottom: -170px;
-    left: 37%;
-}
-.solicitudestexto {
-    font-size:larger;
-    color: rgb(0, 0, 0);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 3px solid black;  
-    padding: 15px;             
-    border-radius: 15px;       
-    background-color: white; 
-    display: inline-block;     
+/* ===================== */
+/* REFUGIOS – FIX FINAL */
+/* ===================== */
 
-     width: 650px;
-    position: relative;
-    bottom: -60px;
-    left: 32%;
-}
-.listarefugios{
-    width: 500px;
-    cursor: pointer;
-    position: relative;
-    bottom: -180px;
-    left: 37%;
-}
-.refugiostexto {
-    font-size:larger;
-    color: rgb(0, 0, 0);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 3px solid black;  
-    padding: 15px;            
-    border-radius: 15px;       
-    background-color: white; 
-    display: inline-block;     
-
-     width: 650px;
-    position: relative;
-    bottom:-240px;
-    left: 112px;
-}
-.AgregarNuevaMascota{
-    width: 500px;
-    cursor: pointer;
-    position: relative;
-    bottom: -150px;
-    left: 37%;
-
-}
-.volvermascotas{
-     width: 100px;
-    cursor: pointer;
-    position: relative;
-    top: 420px;
-    left: -20px;
-    transition: transform 0.3s ease; 
-
-}
-.volvermascotas:hover {
-    transform: scale(1.1);         
-}
-.agregarmascota{
-    width: 50px;
-    left: 70px;
-    top: 100px;
-    position: relative;
-}
-.volversolicitud{
-     width: 100px;
-    cursor: pointer;
-    position: relative;
-    top: 700px;
-    left: 900px;
-    transition: transform 0.3s ease; 
-
-}
-.volversolicitud:hover {
-    transform: scale(1.1);         
-}
-
-.volverrefugio{
-     width: 100px;
-    cursor: pointer;
-    position: relative;
-    top: 700px;
-    left: 900px;
-    transition: transform 0.3s ease; 
-}
-.volverrefugio:hover {
-    transform: scale(1.1);         
-}
-/* Fondo y scroll */
-body {
-    background-image: url("/static/img/Adopta_una_Patitaa.jpg"); 
-    background-size: cover; 
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-}
-
-body::-webkit-scrollbar {
-    display: none; 
-}
-
-.bodygeneral {
-    background-image: url("/static/img/fondo_login.jpg"); 
-    background-size: cover; 
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Contenedor principal */
-.mascotas-container {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px 40px;
+.refugios-container {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: rgba(255,255,255,0.95);
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     text-align: center;
-    max-width: 900px;
-    width: 90%;
 }
 
-/* Título */
-.mascotas-container h2 {
+.refugios-container h2 {
+    margin-bottom: 20px;
     color: #ff6600;
+}
+
+.acciones-superiores {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
-/* Tabla */
-.mascotas-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.mascotas-container th, 
-.mascotas-container td {
-    border: 2px solid black;
-    padding: 10px;
-    font-size: 16px;
-    color: #000;
-}
-
-.mascotas-container th {
-    background-color: #ff6600;
-    color: #fff;
-}
-
-.mascotas-container td {
-    background-color: #fff;
-}
-
-/* Botones de acción */
-.mascotas-container a.boton-accion {
-    color: #fff;
-    background-color: #ff6600;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-decoration: none;
-    margin: 0 2px;
-    font-weight: bold;
-}
-
-.mascotas-container a.boton-accion:hover {
-    transform: scale(1.1);
-    transition: transform 0.2s ease-in-out;
-}
-
-/* Botón Volver */
-.mascotas-container .volvermascotas {
+.btn-accion {
     background-color: #ff6600;
     color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 10px 18px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block;
-    margin-top: 10px;
 }
 
-.mascotas-container .volvermascotas:hover {
-    transform: scale(1.1);
-    transition: transform 0.2s ease-in-out;
-}
-/* Contenedor exclusivo de solicitudes */
-.solicitudes-container {
-    background-color: white;
-    width: 80%;
-    max-width: 800px;
-    margin: 100px auto 50px auto; /* Centrado y separado del top */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    text-align: center;
-}
-
-/* Tabla exclusiva de solicitudes */
-.solicitudes-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.solicitudes-container table, 
-.solicitudes-container th, 
-.solicitudes-container td {
-    border: 1px solid black;
-}
-
-.solicitudes-container th, 
-.solicitudes-container td {
-    padding: 10px;
-    text-align: center;
-}
-
-.solicitudes-container th {
-    background-color: #ff6600;
-    color: white;
-}
-
-/* Botones exclusivos para solicitudes */
-.solicitudes-container .AgregarSolicitud,
-.solicitudes-container .VolverSolicitud {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 5px;
-    background-color: #ff6600;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.solicitudes-container .AgregarSolicitud:hover,
-.solicitudes-container .VolverSolicitud:hover {
+.btn-accion:hover {
     background-color: #e65c00;
 }
-/* Contenedor general */
-.refugios-container {
-    width: 90%;
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 25px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
 
-/* Tabla */
-.refugios-container table {
+.tabla-general {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
 }
 
-.refugios-container th, .refugios-container td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-}
-
-.refugios-container th {
-    background-color: #ff6600;
-    color: white;
-}
-
-/* Botones */
-.boton-agregar, .boton-volver {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff6600;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.boton-agregar:hover, .boton-volver:hover {
-    background-color: #e55a00;
-}
-.boton-volver {
-    position: absolute; /* o relative según necesites */
-    top: 90px;
-    right: 20px;
-}
-/* style.css */
-
-/* Estilo general del body */
-body.bodygeneral {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 20px;
-}
-
-/* Títulos */
-h2 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Tabla de refugios */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-table th, table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-table th {
-    background-color: #ffbb00;
-    color: white;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Botones generales */
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #ffbb00;
-}
-
-/* Botón "Agregar Refugio" */
-.boton-agregar {
-    margin-bottom: 15px;
-    display: inline-block;
-}
-
-/* Botón "Volver al menú" */
-.boton-volver {
-    margin-top: 10px;
-    display: inline-block;
-}
-
-/* Formulario de refugios */
-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    margin: 0 auto 20px auto;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-form input {
-    width: 92%;    
-    padding: 5px;
-    margin-bottom: 15px;
+.tabla-general th,
+.tabla-general td {
     border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Mensajes */
-#mensaje {
-    text-align: center;
-    font-weight: bold;
-}
-.volversolicitud{
-     width: 100px;
-    cursor: pointer;
-    position: relative;
-    top: 700px;
-    left: 900px;
-    transition: transform 0.3s ease; 
-
-}
-.volversolicitud:hover {
-    transform: scale(1.1);         
-}
-
-.form-mascotaa {
-    width: 350px;
     padding: 10px;
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 10px;
-}
-
-.form-solicitud-container {
-    background-color: rgba(255,255,255,0.85);
-    padding: 20px 30px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-    width: 350px;
-    margin: 120px auto; 
     text-align: center;
 }
 
-.form-solicitud-container form {
-    position: static !important;
-    transform: none !important;
-    top: auto !important;
-    left: auto !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-    padding: 10px !important;
-}
-
-.formulariosolicitud {
-    background-color: #4CAF50; 
+.tabla-general th {
+    background-color: #ff6600;
     color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border-radius: 6px;
-    margin-top: 10px;
 }
 
-.error-solicitud {
+.mensaje-error {
     color: red;
     font-weight: bold;
-    margin-top: 10px;
-    text-align: left;
+    margin-bottom: 10px;
 }

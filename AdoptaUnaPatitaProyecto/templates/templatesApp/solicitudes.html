@@ -19,8 +19,7 @@
     {% endif %}
 
     <div style="text-align:center; margin-bottom:20px;">
-        <a href="{% url 'enviar_solicitud' %}?rol={{ rol }}" class="AgregarSolicitud">Agregar Solicitud</a>
-
+        <a href="{% url 'crear_solicitud' %}" class="AgregarSolicitud">Agregar Solicitud</a>
     </div>
 
     <table class="tabla-solicitudes">
@@ -30,7 +29,6 @@
                 <th>Correo</th>
                 <th>Mascota</th>
                 <th>Fecha</th>
-              
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -39,31 +37,26 @@
             {% for solicitud in solicitudes %}
             <tr>
                 <td>{{ solicitud.nombre_adoptante }}</td>
-                <td>{{ solicitud.correo_adoptante }}</td>
+                <td>{{ solicitud.correo }}</td>
                 <td>{{ solicitud.mascota_nombre }}</td>
                 <td>{{ solicitud.fecha }}</td>
-                
 
                 <td>
-                    {% if rol == "admin" %}
-                    <a href="{% url 'actualizar_solicitud' solicitud.id %}?rol={{ rol }}" style="color:#00b7ff; font-weight:bold;">Editar</a>
-                    {% endif %}
+                    <a href="{% url 'actualizar_solicitud' solicitud.id %}"
+                       style="color:#00b7ff; font-weight:bold;">Editar</a>
 
-                    <a href="{% url 'detalle_solicitud' solicitud.id %}?rol={{ rol }}" style="color:green; font-weight:bold; margin-left:10px;">Ver</a>
-
-                    {% if rol == "admin" %}
-                    <a href="{% url 'eliminar_solicitud' solicitud.id %}?rol={{ rol }}" style="color:red; font-weight:bold; margin-left:10px;">Eliminar</a>
-                    {% endif %}
+                    <a href="{% url 'eliminar_solicitud' solicitud.id %}"
+                       style="color:red; font-weight:bold; margin-left:10px;">Eliminar</a>
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" style="text-align:center;">No hay solicitudes</td></tr>
+            <tr><td colspan="5" style="text-align:center;">No hay solicitudes</td></tr>
             {% endfor %}
         </tbody>
     </table>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'menu' %}?rol={{ rol }}" class="volversolicitudes">Volver al Menú</a>
+        <a href="{% url 'menu' %}" class="volversolicitudes">Volver al Menú</a>
     </div>
 
 </div>

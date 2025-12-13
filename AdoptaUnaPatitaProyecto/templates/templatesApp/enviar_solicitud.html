@@ -17,24 +17,26 @@
 
         <p>
             <label>Nombre Adoptante</label><br>
-            {{ form.nombre_adoptante }}
+            <input type="text" name="nombre_adoptante" required>
         </p>
 
         <p>
             <label>Correo Adoptante</label><br>
-            {{ form.correo_adoptante }}
+            <input type="email" name="correo" required>
         </p>
 
         <p>
-            <label>Mascota</label><br>
-            {{ form.mascota_fk }}
+            <label>Nombre de la Mascota</label><br>
+            <input type="text" name="mascota_nombre" required>
         </p>
 
-        <button type="submit" class="formulariosolicitud">Enviar Solicitud</button>
+        <button type="submit" class="formulariosolicitud">
+            Enviar Solicitud
+        </button>
     </form>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'menu' %}?rol={{ rol }}" class="volversolicitudes">Volver</a>
+        <a href="{% url 'ver_solicitudes' %}" class="volversolicitudes">Volver</a>
     </div>
 
 </div>

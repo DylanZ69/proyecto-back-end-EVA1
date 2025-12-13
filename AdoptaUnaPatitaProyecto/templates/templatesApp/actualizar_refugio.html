@@ -23,17 +23,39 @@
 
     <form method="POST" style="max-width:400px; margin:auto;">
         {% csrf_token %}
-        
-        
-        {{ form.as_p }}
 
-        <button type="submit" style="background:#00b7ff; color:white; padding:10px;">
+        <p>
+            <label>Nombre</label><br>
+            <input type="text"
+                   name="nombre"
+                   value="{{ refugio.nombre }}"
+                   required>
+        </p>
+
+        <p>
+            <label>Dirección</label><br>
+            <input type="text"
+                   name="direccion"
+                   value="{{ refugio.direccion }}"
+                   required>
+        </p>
+
+        <p>
+            <label>Teléfono</label><br>
+            <input type="text"
+                   name="telefono"
+                   value="{{ refugio.telefono }}"
+                   required>
+        </p>
+
+        <button type="submit"
+                style="background:#00b7ff; color:white; padding:10px;">
             Actualizar
         </button>
     </form>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'listar_refugios' %}">Volver</a>
+        <a href="{% url 'ver_refugios' %}">Volver</a>
     </div>
 
 </div>

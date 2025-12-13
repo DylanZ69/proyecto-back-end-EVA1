@@ -22,7 +22,30 @@
     <form method="POST" style="max-width:400px; margin:auto;">
         {% csrf_token %}
 
-        {{ form.as_p }}
+        <p>
+            <label>Nombre</label><br>
+            <input type="text" name="nombre" value="{{ mascota.nombre }}" required>
+        </p>
+
+        <p>
+            <label>Edad</label><br>
+            <input type="number" name="edad" min="0" value="{{ mascota.edad }}" required>
+        </p>
+
+        <p>
+            <label>Raza</label><br>
+            <input type="text" name="raza" value="{{ mascota.raza }}" required>
+        </p>
+
+        <p>
+            <label>Tipo</label><br>
+            <input type="text" name="tipo" value="{{ mascota.tipo }}" required>
+        </p>
+
+        <p>
+            <label>Refugio (nombre)</label><br>
+            <input type="text" name="refugio_nombre" value="{{ mascota.refugio_nombre }}" required>
+        </p>
 
         <button type="submit" style="background:#00b7ff; color:white; font-weight:bold;">
             Guardar Cambios
@@ -30,7 +53,7 @@
     </form>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'listar_mascotas' %}?rol={{ rol }}" class="listar_mascotas">Volver</a>
+        <a href="{% url 'ver_mascotas' %}" class="listar_mascotas">Volver</a>
     </div>
 
 </div>

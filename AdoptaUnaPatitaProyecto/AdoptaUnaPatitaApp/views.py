@@ -175,6 +175,55 @@ def crear_refugio(request):
 
     return render(request, "templatesApp/agregar_refugios.html")
 
+def actualizar_refugio(request, id):
+    headers = get_headers(request)
+
+    if request.method == "POST":
+        data = {
+            "nombre": request.POST.get("nombre"),
+            "direccion": request.POST.get("direccion"),
+            "telefono": request.POST.get("telefono"),
+        }
+
+        response = requests.put(
+            f"{API_BASE_URL}/refugios/{id}/",
+            headers=headers,
+            data=data
+        )
+
+        if response.status_code in (200, 204):
+            messages.success(request, "Refugio actualizado")
+            return redirect("ver_refugios")
+        else:
+            messages.error(request, "Error al actualizar refugio")
+
+    refugio = requests.get(
+        f"{API_BASE_URL}/refugios/{id}/",
+        headers=headers
+    ).json()
+
+    return render(request, "templatesApp/actualizar_refugio.html", {"refugio": refugio})
+
+
+def eliminar_refugio(request, id):
+    if request.method == "POST":
+        requests.delete(
+            f"{API_BASE_URL}/refugios/{id}/",
+            headers=get_headers(request)
+        )
+        messages.success(request, "Refugio eliminado")
+        return redirect("ver_refugios")
+
+    refugio = requests.get(
+        f"{API_BASE_URL}/refugios/{id}/",
+        headers=get_headers(request)
+    ).json()
+
+    return render(
+        request,
+        "templatesApp/confirmar_eliminar_refugio.html",
+        {"refugio": refugio}
+    )
 
 # ==========================
 # SOLICITUDES (API)
@@ -209,3 +258,56 @@ def crear_solicitud(request):
             messages.error(request, "Error al enviar solicitud")
 
     return render(request, "templatesApp/enviar_solicitud.html")
+def actualizar_solicitud(request, id):
+    headers = get_headers(request)
+
+    if request.method == "POST":
+        data = {
+            "nombre_adoptante": request.POST.get("nombre_adoptante"),
+            "correo": request.POST.get("correo"),
+            "mascota_nombre": request.POST.get("mascota_nombre"),
+        }
+
+        response = requests.put(
+            f"{API_BASE_URL}/solicitudes/{id}/",
+            headers=headers,
+            data=data
+        )
+
+        if response.status_code in (200, 204):
+            messages.success(request, "Solicitud actualizada")
+            return redirect("ver_solicitudes")
+        else:
+            messages.error(request, "Error al actualizar solicitud")
+
+    solicitud = requests.get(
+        f"{API_BASE_URL}/solicitudes/{id}/",
+        headers=headers
+    ).json()
+
+    return render(
+        request,
+        "templatesApp/actualizar_solicitud.html",
+        {"solicitud": solicitud}
+    )
+
+
+def eliminar_solicitud(request, id):
+    if request.method == "POST":
+        requests.delete(
+            f"{API_BASE_URL}/solicitudes/{id}/",
+            headers=get_headers(request)
+        )
+        messages.success(request, "Solicitud eliminada")
+        return redirect("ver_solicitudes")
+
+    solicitud = requests.get(
+        f"{API_BASE_URL}/solicitudes/{id}/",
+        headers=get_headers(request)
+    ).json()
+
+    return render(
+        request,
+        "templatesApp/confirmar_eliminar_solicitud.html",
+        {"solicitud": solicitud}
+    )

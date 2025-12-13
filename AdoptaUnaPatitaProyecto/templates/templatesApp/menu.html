@@ -9,41 +9,37 @@
 
 <body class="menufondo">
 
-    <p class="rol-texto">Rol actual: {{ rol }}</p>
-
     <img src="{% static 'img/MenuPrincipal.png' %}" class="MenuPrincipal">
 
     <ul class="menu-imagenes">
 
         <!-- Ver Mascotas -->
-        <a href="{% url 'listar_mascotas' %}?rol={{ rol }}">
+        <a href="{% url 'ver_mascotas' %}">
             <img src="{% static 'img/VerMascotas.png' %}" 
                  class="VerMascotas" 
                  alt="Ver Mascotas">
         </a>
 
         <!-- Ver Refugios -->
-        <a href="{% url 'ver_refugios' %}?rol={{ rol }}">
+        <a href="{% url 'ver_refugios' %}">
             <img src="{% static 'img/VerRefugios.png' %}" 
                  class="VerRefugios"
                  alt="Ver Refugios">
         </a>
 
         <!-- Ver Solicitudes -->
-        <a href="{% url 'ver_solicitudes' %}?rol={{ rol }}">
+        <a href="{% url 'ver_solicitudes' %}">
             <img src="{% static 'img/VerSolicitudes.png' %}" 
                  class="VerSolicitudes"
                  alt="Ver Solicitudes">
         </a>
 
-        <!-- SOLO ADMIN: Agregar mascota -->
-        {% if rol == "admin" %}
-        <a href="{% url 'crear_mascota' %}?rol={{ rol }}">
+        <!-- Agregar Mascota -->
+        <a href="{% url 'crear_mascota' %}">
             <img src="{% static 'img/AgregarMascotas.png' %}" 
                  class="AgregarMascotas"
                  alt="Agregar Mascota">
         </a>
-        {% endif %}
 
         <!-- Cerrar sesión -->
         <a href="{% url 'logout' %}">

@@ -20,13 +20,11 @@
 {% endif %}
 
 <!-- Botón agregar -->
-{% if rol == "admin" %}
 <div style="text-align:center; margin-bottom:20px;">
-    <a href="{% url 'crear_refugio' %}?rol={{ rol }}">
+    <a href="{% url 'crear_refugio' %}">
         <button class="btn-accion">Agregar Refugio</button>
     </a>
 </div>
-{% endif %}
 
 <!-- Tabla -->
 <table class="tabla-general">
@@ -36,7 +34,7 @@
             <th>Nombre</th>
             <th>Dirección</th>
             <th>Teléfono</th>
-            {% if rol == "admin" %}<th>Acciones</th>{% endif %}
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -46,19 +44,14 @@
             <td>{{ refugio.nombre }}</td>
             <td>{{ refugio.direccion }}</td>
             <td>{{ refugio.telefono }}</td>
-            
-            {% if rol == "admin" %}
+
             <td>
-                <a href="{% url 'detalle_refugio' refugio.id %}?rol={{ rol }}" 
-                   style="color:green; font-weight:bold;">Ver</a>
+                <a href="{% url 'actualizar_refugio' refugio.id %}" 
+                   style="color:#00b7ff; font-weight:bold;">Editar</a>
 
-                <a href="{% url 'actualizar_refugio' refugio.id %}?rol={{ rol }}" 
-                   style="color:#00b7ff; font-weight:bold; margin-left:10px;">Editar</a>
-
-                <a href="{% url 'eliminar_refugio' refugio.id %}?rol={{ rol }}" 
+                <a href="{% url 'eliminar_refugio' refugio.id %}" 
                    style="color:red; font-weight:bold; margin-left:10px;">Eliminar</a>
             </td>
-            {% endif %}
         </tr>
 
         {% empty %}
@@ -72,7 +65,7 @@
 <br>
 
 <div style="text-align:center;">
-    <a href="{% url 'menu' %}?rol={{ rol }}">
+    <a href="{% url 'menu' %}">
         <button class="btn-accion">Volver al Menú</button>
     </a>
 </div>
